@@ -1,0 +1,8 @@
+node_modules
+build
+coverage
+.firebase
+.nyc_output
+.vscode
+.dockerignore
+Dockerfile
