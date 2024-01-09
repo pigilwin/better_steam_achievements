@@ -5,16 +5,18 @@ import {
 } from 'react-router-dom';
 
 import { Default } from './pages/index';
+import { NavigationBar } from 'components/NavigationBar';
 
 export const App = (): JSX.Element => {
     
   return (
-    <main className="font-sans antialiased leading-normal tracking-wider bg-gray-100 dark:bg-gray-700 white">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Default/>}/>
-        </Routes>
-      </BrowserRouter>
+    <main className="font-sans antialiased leading-normal tracking-wider bg-slate-300 min-h-screen">
+        <BrowserRouter>
+          <NavigationBar/>
+          <Routes>
+            <Route path="/" element={<Default/>}/>
+          </Routes>
+        </BrowserRouter>
     </main>
   );
 }
