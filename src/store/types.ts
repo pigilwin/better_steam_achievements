@@ -1,11 +1,11 @@
 export interface StoredGame {
-    steamId: string;
+    steamId: number;
     name: string;
     hidden: boolean;
 }
 
 export interface StoredAchievement {
-    steamId: string;
+    steamId: number;
     name: string;
     description: string;
     completed: boolean;
