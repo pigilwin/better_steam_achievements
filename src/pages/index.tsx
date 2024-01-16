@@ -1,8 +1,21 @@
 import { GameCard } from "components/GameCard";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Game } from "store/types";
 
 export const Default = (): JSX.Element => {
+
+    useEffect(() => {
+        callback().then((res) => {
+            console.log(res);
+        });
+    });
+
+    const callback = () => {
+        const url = import.meta.env.VITE_API_URL;
+        return window.fetch(url);
+    };
+
     return (
         <section className="flex flex-col gap-2 m-4">
             <NoProfileSelectedInformationBar/>

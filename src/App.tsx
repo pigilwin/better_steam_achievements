@@ -4,7 +4,7 @@ import {
   Routes
 } from 'react-router-dom';
 
-import { Default } from './pages/index';
+import { Default } from './pages';
 import { NavigationBar } from 'components/NavigationBar';
 
 export const App = (): JSX.Element => {
