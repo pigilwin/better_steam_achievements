@@ -1,31 +1,33 @@
-import { GameCard } from "components/GameCard";
-import { useEffect } from "react";
+import {ReactElement} from "react";
 import { useNavigate } from "react-router-dom";
+import {useSelector} from "react-redux";
+
+import { GameCard } from "components/GameCard";
+
 import { Game } from "store/types";
+import {getSelectedProfileSelector} from "../store/application/applicationSlice";
 
-export const Default = (): JSX.Element => {
+export const Default = (): ReactElement => {
 
-    useEffect(() => {
-        callback().then((res) => {
-            console.log(res);
-        });
-    });
+    const selectedProfile = useSelector(getSelectedProfileSelector);
 
-    const callback = () => {
-        const url = import.meta.env.VITE_API_URL;
-        return window.fetch(url);
-    };
+    const children: ReactElement[] = [];
+
+    if (selectedProfile === undefined) {
+        children.push(<NoProfileSelectedInformationBar key="no-profile"/>);
+    } else {
+        children.push(<ProfileSelected key="profile-selected"/>);
+        children.push(<Grid key="achievement-grid"/>);
+    }
 
     return (
         <section className="flex flex-col gap-2 m-4">
-            <NoProfileSelectedInformationBar/>
-            <ProfileSelected/>
-            <Grid/>
+            {children}
         </section>
     );
 };
 
-const NoProfileSelectedInformationBar = (): JSX.Element => {
+const NoProfileSelectedInformationBar = (): ReactElement => {
     const navigate = useNavigate();
     const handler = () => {
         navigate('/profiles');
@@ -40,7 +42,7 @@ const NoProfileSelectedInformationBar = (): JSX.Element => {
     );
 };
 
-const ProfileSelected = (): JSX.Element => {
+const ProfileSelected = (): ReactElement => {
     return (
         <article className="flex flex-col items-center justify-center bg-white w-full p-2 rounded-md">
             <h2 className="text-xl">10 games have been fully completed</h2>
@@ -49,10 +51,10 @@ const ProfileSelected = (): JSX.Element => {
     );
 }
 
-const Grid = (): JSX.Element => {
+const Grid = (): ReactElement => {
     const game: Game = {
         achievements: [],
-        steamId: 632360,
+        id: 632360,
         name: "Risk Of Rain 2",
         hidden: false
     }; 

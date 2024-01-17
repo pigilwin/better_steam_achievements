@@ -1,22 +1,35 @@
+import {ReactElement, useEffect} from "react";
+
 import {
-  BrowserRouter,
-  Route,
-  Routes
+    BrowserRouter,
+    Route,
+    Routes
 } from 'react-router-dom';
 
-import { Default } from './pages';
-import { NavigationBar } from 'components/NavigationBar';
+import {useDispatch} from "react-redux";
 
-export const App = (): JSX.Element => {
-    
-  return (
-    <main className="font-sans antialiased leading-normal tracking-wider bg-slate-300 min-h-screen">
-        <BrowserRouter>
-          <NavigationBar/>
-          <Routes>
-            <Route path="/" element={<Default/>}/>
-          </Routes>
-        </BrowserRouter>
-    </main>
-  );
+
+import {Default} from './pages';
+import {NavigationBar} from 'components/NavigationBar';
+import {AppDispatch} from "./store";
+import {initialiseApplicationState} from "./store/application/thunk";
+
+export const App = (): ReactElement => {
+
+    const dispatch = useDispatch<AppDispatch>();
+
+    useEffect(() => {
+        dispatch(initialiseApplicationState());
+    }, [dispatch]);
+
+    return (
+        <main className="font-sans antialiased leading-normal tracking-wider bg-slate-300 min-h-screen">
+            <BrowserRouter>
+                <NavigationBar/>
+                <Routes>
+                    <Route path="/" element={<Default/>}/>
+                </Routes>
+            </BrowserRouter>
+        </main>
+    );
 }

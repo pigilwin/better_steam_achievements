@@ -1,28 +1,40 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../rootReducer";
 import { deepCopy } from "lib/deepCopy";
+import {Profile, Profiles} from "../types";
 
-export type ApplicationState = {value: boolean};
-
+interface ApplicationState {
+    profile: Profile | undefined,
+    profiles: Profiles
+}
 export const initialState: ApplicationState =  {
-    value: false
+    profile: undefined,
+    profiles: []
 };
 
 const applicationSlice = createSlice({
     name: 'application',
     initialState,
     reducers: {
-        apply(state: ApplicationState, action: PayloadAction<boolean>) {
+        setProfiles(state: ApplicationState, action: PayloadAction<Profiles>) {
             const newState = deepCopy<ApplicationState>(state);
-            newState.value = action.payload;
+            newState.profiles = action.payload;
             return newState;
         },
+        setProfile(state: ApplicationState, action: PayloadAction<Profile>) {
+            const newState = deepCopy<ApplicationState>(state);
+            newState.profile = action.payload;
+            return newState;
+        }
     }
 });
 
 export const reducer = applicationSlice.reducer;
+
 export const {
-    apply
+    setProfile,
+    setProfiles
 } = applicationSlice.actions;
 
-export const getApply = (state: RootState): boolean => state.applicationReducer.value;
+export const getSelectedProfileSelector = (state: RootState): Profile | undefined => state.applicationReducer.profile;
+export const getProfilesSelector = (state: RootState): Profiles => state.applicationReducer.profiles;
