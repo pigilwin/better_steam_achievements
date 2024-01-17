@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../rootReducer";
-import { deepCopy } from "lib/deepCopy";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {RootState} from "../rootReducer";
+import {deepCopy} from "lib/deepCopy";
 import {Profile, Profiles} from "../types";
 
 interface ApplicationState {
@@ -25,6 +25,23 @@ const applicationSlice = createSlice({
             const newState = deepCopy<ApplicationState>(state);
             newState.profile = action.payload;
             return newState;
+        },
+        addProfile(state: ApplicationState, action: PayloadAction<Profile>) {
+            const newState = deepCopy<ApplicationState>(state);
+            newState.profiles.push(action.payload);
+            return newState;
+        },
+        unsetProfile(state: ApplicationState, action: PayloadAction) {
+            const newState = deepCopy<ApplicationState>(state);
+            newState.profile = undefined;
+            return newState;
+        },
+        removeProfile(state: ApplicationState, action: PayloadAction<Profile>) {
+            const newState = deepCopy<ApplicationState>(state);
+            newState.profiles = state.profiles.filter((profile) => {
+                return action.payload.profileId !== profile.profileId;
+            });
+            return newState;
         }
     }
 });
@@ -33,7 +50,10 @@ export const reducer = applicationSlice.reducer;
 
 export const {
     setProfile,
-    setProfiles
+    setProfiles,
+    addProfile,
+    unsetProfile,
+    removeProfile
 } = applicationSlice.actions;
 
 export const getSelectedProfileSelector = (state: RootState): Profile | undefined => state.applicationReducer.profile;

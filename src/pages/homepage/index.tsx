@@ -1,20 +1,20 @@
 import {ReactElement} from "react";
-import { useNavigate } from "react-router-dom";
 import {useSelector} from "react-redux";
 
 import { GameCard } from "components/GameCard";
+import NoProfileSelected from 'pages/homepage/components/NoProfileSelected';
 
 import { Game } from "store/types";
-import {getSelectedProfileSelector} from "../store/application/applicationSlice";
+import {getSelectedProfileSelector} from "../../store/application/applicationSlice";
 
-export const Default = (): ReactElement => {
+export const Index = (): ReactElement => {
 
     const selectedProfile = useSelector(getSelectedProfileSelector);
 
     const children: ReactElement[] = [];
 
     if (selectedProfile === undefined) {
-        children.push(<NoProfileSelectedInformationBar key="no-profile"/>);
+        children.push(<NoProfileSelected key="no-profile"/>);
     } else {
         children.push(<ProfileSelected key="profile-selected"/>);
         children.push(<Grid key="achievement-grid"/>);
@@ -24,21 +24,6 @@ export const Default = (): ReactElement => {
         <section className="flex flex-col gap-2 m-4">
             {children}
         </section>
-    );
-};
-
-const NoProfileSelectedInformationBar = (): ReactElement => {
-    const navigate = useNavigate();
-    const handler = () => {
-        navigate('/profiles');
-    };
-
-    const link = <a onClick={handler} className="text-blue-300 cursor-pointer">please select a profile</a>;
-    
-    return (
-        <article className="flex flex-row justify-center bg-white w-full p-2 rounded-md">
-            <h2 className="text-xl">No profile has been selected, {link}</h2>
-        </article>
     );
 };
 
