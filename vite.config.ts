@@ -5,7 +5,8 @@ import tsconfigpaths from 'vite-tsconfig-paths';
 export default defineConfig({
     plugins: [react(), tsconfigpaths()],
     server: {
-        port: 3000,
+        host: '127.0.0.1',
+        port: 3000
     },
     define: {
         VITE_APP_VERSION: JSON.stringify(process.env.npm_package_version),
