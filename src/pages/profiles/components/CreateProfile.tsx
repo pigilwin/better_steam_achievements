@@ -2,7 +2,7 @@ import {ChangeEvent, ChangeEventHandler, ReactElement, useState} from "react";
 import {BlueButton} from "@components/Buttons";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "@store/index";
-import {createProfile as createProfileThunk} from "@store/application/thunk";
+import {createProfileThunk as createProfileThunk} from "@store/application/thunk";
 import {Profiles} from "@store/types";
 
 interface CreateProfileProps {

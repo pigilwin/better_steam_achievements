@@ -21,7 +21,7 @@ const applicationSlice = createSlice({
             newState.profiles = action.payload;
             return newState;
         },
-        setProfile(state: ApplicationState, action: PayloadAction<Profile>) {
+        selectProfile(state: ApplicationState, action: PayloadAction<Profile>) {
             const newState = deepCopy<ApplicationState>(state);
             newState.profile = action.payload;
             return newState;
@@ -49,7 +49,7 @@ const applicationSlice = createSlice({
 export const reducer = applicationSlice.reducer;
 
 export const {
-    setProfile,
+    selectProfile,
     setProfiles,
     addProfile,
     unsetProfile,

@@ -2,11 +2,11 @@ import {AppDispatch, AppThunk} from "../index";
 import {RootStateHook} from "../rootReducer";
 import {
     readProfiles,
-    createProfile as createProfileDatabase,
-    removeProfile as removeProfileDatabase
+    createProfile,
+    removeProfile
 } from "./database";
 import {
-    setProfile,
+    selectProfile,
     setProfiles,
     addProfile,
     removeProfile as removeProfileDispatch,
@@ -19,7 +19,7 @@ const localStorageKey: string = 'selectedProfile';
 /**
  * Initialise the application and read the object store
  */
-export const initialiseApplicationState = (
+export const initialiseApplicationStateThunk = (
 ): AppThunk => async (
     dispatch: AppDispatch,
     getState: RootStateHook,
@@ -43,27 +43,50 @@ export const initialiseApplicationState = (
         if (profile === undefined) {
             localStorage.removeItem(localStorageKey);
         } else {
-            dispatch(setProfile(profile));
+            dispatch(selectProfile(profile));
         }
     }
 }
 
-export const createProfile = (profileId: string): AppThunk => async (
+export const createProfileThunk = (profileId: string): AppThunk => async (
     dispatch: AppDispatch,
     getState: RootStateHook
 ) => {
-    const profile = await createProfileDatabase({profileId: profileId});
+    const profile = await createProfile({profileId: profileId});
     /**
      * Add this profile to the list
      */
     dispatch(addProfile(profile));
 }
 
-export const removeProfile = (profile: Profile): AppThunk => async (
+/**
+ * Select a profile within the system
+ * @param {Profile} profile
+ */
+export const selectProfileThunk = (profile: Profile): AppThunk => async (
+    dispatch: AppDispatch,
+    getState: RootStateHook
+)=> {
+
+    localStorage.setItem(localStorageKey, profile.profileId);
+
+    dispatch(selectProfile(profile));
+}
+
+export const unsetProfileThunk = (profile: Profile): AppThunk => async (
     dispatch: AppDispatch,
     getState: RootStateHook
 ) => {
-    await removeProfileDatabase(profile);
+    localStorage.removeItem(localStorageKey);
+
+    dispatch(unsetProfile());
+}
+
+export const removeProfileThunk = (profile: Profile): AppThunk => async (
+    dispatch: AppDispatch,
+    getState: RootStateHook
+) => {
+    await removeProfile(profile);
 
     const selectedProfile = getState().applicationReducer.profile;
     if (selectedProfile !== undefined) {

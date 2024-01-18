@@ -3,14 +3,17 @@ import {useDispatch, useSelector} from "react-redux";
 import {
     getProfilesSelector,
     getSelectedProfileSelector,
-    setProfile,
-    unsetProfile
 } from "@store/application/applicationSlice";
 import {BlueButton, GreenButton, RedButton} from "@components/Buttons";
 import CreateProfile from "./components/CreateProfile";
 import {AppDispatch} from "@store/index";
 import {Profile} from "@store/types";
-import {removeProfile} from "@store/application/thunk";
+
+import {
+    removeProfileThunk,
+    selectProfileThunk,
+    unsetProfileThunk
+} from "@store/application/thunk";
 
 export const Index = (): ReactElement => {
     const profiles = useSelector(getProfilesSelector);
@@ -62,24 +65,29 @@ const ProfileRow = ({profile, selected}: ProfileRowProps): ReactElement => {
     const dispatch = useDispatch<AppDispatch>();
 
     const selectProfileHandler = () => {
-        dispatch(setProfile(profile));
+        dispatch(selectProfileThunk(profile));
     };
 
     let button: ReactElement = <BlueButton buttonText="Select Profile" onClick={selectProfileHandler}/>
     if (selected) {
         const unSelectProfileHandler = () => {
-            dispatch(unsetProfile());
+            dispatch(unsetProfileThunk(profile));
         };
         button = <GreenButton buttonText="Profile Selected" onClick={unSelectProfileHandler}/>
     }
 
     const deleteProfileHandler = () => {
-        dispatch(removeProfile(profile));
+        dispatch(removeProfileThunk(profile));
     };
+
+    const steamProfileUrl = `https://steamcommunity.com/profiles/${profile.profileId}/`;
 
     return (
         <span className="w-full flex flex-row justify-between items-center p-4 bg-white rounded-md">
-            <span className="w-full">{profile.profileId}</span>
+            <span className="w-full">Profile Id: {profile.profileId}</span>
+            <span className="w-full">
+                <a className="text-blue-300" href={steamProfileUrl}>{steamProfileUrl}</a>
+            </span>
             <span className="w-full flex flex-row justify-end gap-2">
                 {button}
                 <RedButton buttonText="Delete" onClick={deleteProfileHandler}/>

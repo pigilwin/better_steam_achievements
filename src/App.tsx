@@ -13,14 +13,14 @@ import {Index as Homepage} from './pages/homepage';
 import {Index as Profiles} from './pages/profiles';
 
 import {NavigationBar} from 'components/NavigationBar';
-import {initialiseApplicationState} from "./store/application/thunk";
+import {initialiseApplicationStateThunk} from "./store/application/thunk";
 
 export const App = (): ReactElement => {
 
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
-        dispatch(initialiseApplicationState());
+        dispatch(initialiseApplicationStateThunk());
     }, [dispatch]);
 
     return (
