@@ -1,6 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {produce} from 'immer';
+
 import {RootState} from "../rootReducer";
-import {deepCopy} from "lib/deepCopy";
 import {Profile, Profiles} from "../types";
 
 interface ApplicationState {
@@ -17,31 +18,31 @@ const applicationSlice = createSlice({
     initialState,
     reducers: {
         setProfiles(state: ApplicationState, action: PayloadAction<Profiles>) {
-            const newState = deepCopy<ApplicationState>(state);
-            newState.profiles = action.payload;
-            return newState;
+            return produce<ApplicationState>(state, newState => {
+                newState.profiles = action.payload;
+            });
         },
         selectProfile(state: ApplicationState, action: PayloadAction<Profile>) {
-            const newState = deepCopy<ApplicationState>(state);
-            newState.profile = action.payload;
-            return newState;
+            return produce<ApplicationState>(state, newState => {
+                newState.profile = action.payload;
+            });
         },
         addProfile(state: ApplicationState, action: PayloadAction<Profile>) {
-            const newState = deepCopy<ApplicationState>(state);
-            newState.profiles.push(action.payload);
-            return newState;
+            return produce<ApplicationState>(state, newState => {
+                newState.profiles.push(action.payload);
+            });
         },
         unsetProfile(state: ApplicationState, action: PayloadAction) {
-            const newState = deepCopy<ApplicationState>(state);
-            newState.profile = undefined;
-            return newState;
+            return produce<ApplicationState>(state, newState => {
+                newState.profile = undefined;
+            });
         },
         removeProfile(state: ApplicationState, action: PayloadAction<Profile>) {
-            const newState = deepCopy<ApplicationState>(state);
-            newState.profiles = state.profiles.filter((profile) => {
-                return action.payload.profileId !== profile.profileId;
+            return produce<ApplicationState>(state, newState => {
+                newState.profiles = state.profiles.filter((profile) => {
+                    return action.payload.profileId !== profile.profileId;
+                });
             });
-            return newState;
         }
     }
 });

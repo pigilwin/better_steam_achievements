@@ -23,7 +23,6 @@
     "jsx": "react-jsx",
     "paths": {
       "@components/*": ["components/*"],
-      "@lib/*": ["lib/*"],
       "@store/*": ["store/*"],
     }
   },
