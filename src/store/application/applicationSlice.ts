@@ -2,10 +2,10 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {produce} from 'immer';
 
 import {RootState} from "../rootReducer";
-import {Profile, Profiles} from "../types";
+import {PotentialProfile, Profile, Profiles} from "../types";
 
 interface ApplicationState {
-    profile: Profile | undefined,
+    profile: PotentialProfile,
     profiles: Profiles
 }
 export const initialState: ApplicationState =  {
@@ -57,5 +57,5 @@ export const {
     removeProfile
 } = applicationSlice.actions;
 
-export const getSelectedProfileSelector = (state: RootState): Profile | undefined => state.applicationReducer.profile;
+export const getSelectedProfileSelector = (state: RootState): PotentialProfile => state.applicationReducer.profile;
 export const getProfilesSelector = (state: RootState): Profiles => state.applicationReducer.profiles;
