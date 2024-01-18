@@ -71,7 +71,7 @@ const ProfileRow = ({profile, selected}: ProfileRowProps): ReactElement => {
     let button: ReactElement = <BlueButton buttonText="Select Profile" onClick={selectProfileHandler}/>
     if (selected) {
         const unSelectProfileHandler = () => {
-            dispatch(unsetProfileThunk(profile));
+            dispatch(unsetProfileThunk());
         };
         button = <GreenButton buttonText="Profile Selected" onClick={unSelectProfileHandler}/>
     }

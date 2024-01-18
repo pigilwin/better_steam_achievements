@@ -67,10 +67,9 @@ export const storeGame = async (game: StoredGame): Promise<string> => {
     const database = await openDatabase();
     const transaction = database.transaction('games', 'readwrite');
     const store = transaction.objectStore('games');
-
-    const key = await store.put(game);
+    const key = game.profileId + '-' + game.id;
+    await store.put(game);
     await transaction.done;
-
     return key;
 };
 
@@ -79,7 +78,9 @@ export const storeAchievement = async (game: Game, achievement: StoredAchievemen
     const transaction = database.transaction('achievements', 'readwrite');
     const store = transaction.objectStore('achievements');
 
-    const key = await store.put(achievement);
+    const key = game.profileId + '-' + game.id + '-' + achievement.id;
+
+    await store.put(achievement);
 
     await transaction.done;
 

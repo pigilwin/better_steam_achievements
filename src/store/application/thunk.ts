@@ -13,6 +13,7 @@ import {
     unsetProfile
 } from "./applicationSlice";
 import {Profile} from "@store/types";
+import {initialiseGames} from "@store/game/thunk";
 
 const localStorageKey: string = 'selectedProfile';
 
@@ -71,9 +72,11 @@ export const selectProfileThunk = (profile: Profile): AppThunk => async (
     localStorage.setItem(localStorageKey, profile.profileId);
 
     dispatch(selectProfile(profile));
+
+    dispatch(initialiseGames(profile));
 }
 
-export const unsetProfileThunk = (profile: Profile): AppThunk => async (
+export const unsetProfileThunk = (): AppThunk => async (
     dispatch: AppDispatch,
     getState: RootStateHook
 ) => {
