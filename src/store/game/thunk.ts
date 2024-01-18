@@ -11,9 +11,9 @@ import {
     StoredGame
 } from "@store/types";
 
-import {doesProfileHaveAnyGames, storeGame, storeAchievement} from "@store/game/database";
+import {doesProfileHaveAnyGames, loadGamesFromStorage, storeGame, storeAchievement} from "@store/game/database";
 import {loadGamesFromApi, loadAchievementsForGame} from "@store/game/api";
-import {setGames} from "@store/game/gameSlice";
+import {setGames, loadingGames} from "@store/game/gameSlice";
 
 export const initialiseGames = (
     profile: Profile
@@ -21,13 +21,15 @@ export const initialiseGames = (
     dispatch: AppDispatch,
     getState: RootStateHook,
 ) => {
+    dispatch(loadingGames());
+
     const doesProfileHaveStoredGames = await doesProfileHaveAnyGames(profile);
     /**
      * This is all going to be loaded from the cache so the API doesn't have to be called
      * when loading the page loads of times
      */
     if (doesProfileHaveStoredGames) {
-        const games: Games = await loadGamesFromStorage();
+        const games: Games = await loadGamesFromStorage(profile);
         dispatch(setGames(games));
     }
 
@@ -70,7 +72,8 @@ export const initialiseGames = (
                 iconUrl: achievementResponse.iconUrl,
                 grayIconUrl: achievementResponse.grayIconUrl,
                 hidden: achievementResponse.hidden,
-                profileId: profile.profileId
+                profileId: profile.profileId,
+                gameId: game.id
             };
 
             const storedKey = await storeAchievement(game, storedAchievement);

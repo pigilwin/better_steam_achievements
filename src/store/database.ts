@@ -1,17 +1,17 @@
 import { DBSchema, IDBPDatabase, openDB } from 'idb';
 import { Profile, StoredAchievement, StoredGame } from './types';
 
-export const openDatabase = async (): Promise<IDBPDatabase<BetterSteamAchievements>> => {
-    return await openDB<BetterSteamAchievements>('better-steam-achievements', 1, {
-        upgrade: (db: IDBPDatabase<BetterSteamAchievements>) => {
-            db.createObjectStore('games');
-            db.createObjectStore('achievements');
-            db.createObjectStore('profiles');
+export const openDatabase = async (): Promise<IDBPDatabase<BetterSteamAchievementsSchema>> => {
+    return await openDB<BetterSteamAchievementsSchema>('better-steam-achievements', 1, {
+        upgrade: (db: IDBPDatabase<BetterSteamAchievementsSchema>) => {
+            db.createObjectStore('games',{autoIncrement: true});
+            db.createObjectStore('achievements',{autoIncrement: true});
+            db.createObjectStore('profiles',{autoIncrement: true});
         }
     });
 }
 
-interface BetterSteamAchievements extends DBSchema {
+export interface BetterSteamAchievementsSchema extends DBSchema {
     'games': {
         key: string;
         value: StoredGame;

@@ -1,6 +1,13 @@
-import {Game, Profile, StoredAchievement, StoredGame} from "@store/types";
+import {
+    Achievements,
+    Game,
+    Games,
+    LoadedGameProperties, LoadedStoredAchievement,
+    Profile,
+    StoredAchievement,
+    StoredGame
+} from "@store/types";
 import {openDatabase} from "@store/database";
-import {a} from "@react-spring/web";
 
 export const doesProfileHaveAnyGames = async (profile: Profile): Promise<boolean> => {
     const database = await openDatabase();
@@ -15,17 +22,56 @@ export const doesProfileHaveAnyGames = async (profile: Profile): Promise<boolean
     return hasGames;
 }
 
+export const loadGamesFromStorage = async (profile: Profile): Promise<Games> => {
+    const games: Games = [];
+    const database = await openDatabase();
+    const gamesTransaction = database.transaction('games');
+    for await (const cursor of gamesTransaction.store) {
+        if (cursor.value.profileId !== profile.profileId) {
+            continue;
+        }
+        const game: Game = Object.assign<StoredGame, LoadedGameProperties>(cursor.value, {
+            storedKey: cursor.key,
+            achievements: []
+        });
+        games.push(game);
+    }
+    await gamesTransaction.done;
+
+    for (const game of games) {
+        game.achievements = await loadAchievementsFromStorage(profile, game);
+    }
+
+    return games;
+};
+
+export const loadAchievementsFromStorage = async (profile: Profile, game: Game): Promise<Achievements> => {
+    const achievements: Achievements = [];
+    const database = await openDatabase();
+    const achievementTransaction = database.transaction('achievements');
+    for await (const cursor of achievementTransaction.store) {
+        if (cursor.value.gameId !== game.id || cursor.value.profileId !== profile.profileId) {
+            continue;
+        }
+        const achievement = Object.assign<StoredAchievement, LoadedStoredAchievement>(cursor.value, {
+            storedKey: cursor.key
+        });
+        achievements.push(achievement);
+    }
+    await achievementTransaction.done;
+    return achievements;
+};
+
+
 export const storeGame = async (game: StoredGame): Promise<string> => {
     const database = await openDatabase();
     const transaction = database.transaction('games', 'readwrite');
     const store = transaction.objectStore('games');
 
-    const storedKey = game.profileId + '-' + game.id;
-
-    await store.put(game, storedKey);
+    const key = await store.put(game);
     await transaction.done;
 
-    return storedKey;
+    return key;
 };
 
 export const storeAchievement = async (game: Game, achievement: StoredAchievement): Promise<string> => {
@@ -33,10 +79,9 @@ export const storeAchievement = async (game: Game, achievement: StoredAchievemen
     const transaction = database.transaction('achievements', 'readwrite');
     const store = transaction.objectStore('achievements');
 
-    const storedKey = game.profileId + '-' + game.id + '-' + achievement.id;
+    const key = await store.put(achievement);
 
-    await store.put(achievement, storedKey);
     await transaction.done;
 
-    return storedKey;
+    return key;
 }

@@ -5,7 +5,7 @@ export interface StoredGame {
     profileId: string;
 }
 export interface LoadedGameProperties {
-    achievements: Achievement[];
+    achievements: Achievements;
     storedKey: string;
 }
 
@@ -19,6 +19,7 @@ export interface StoredAchievement {
     grayIconUrl: string;
     hidden: boolean;
     profileId: string;
+    gameId: number;
 }
 export interface LoadedStoredAchievement {
     storedKey: string;
@@ -27,6 +28,7 @@ export interface LoadedStoredAchievement {
 export interface Game extends StoredGame, LoadedGameProperties {}
 export type Games = Game[];
 export interface Achievement extends StoredAchievement, LoadedStoredAchievement {}
+export type Achievements = Achievement[];
 
 export interface Profile {
     profileId: string;
