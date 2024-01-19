@@ -8,7 +8,7 @@ export default (): ReactElement => {
     const games = useSelector(getCompletedGamesSelector);
     return (
         <>
-            <ProfileSelected gameCount={Object.keys(games).length} key="profile-selected"/>
+            <ProfileSelected games={games} key="profile-selected"/>
             <ResizableGrid games={games} key="resizable-grid"/>
         </>
     );

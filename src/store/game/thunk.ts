@@ -52,13 +52,15 @@ export const initialiseGamesThunk = (
     }
 
     const games: Games = {};
-    for (const gameResponse of await loadGamesFromApi(profile)) {
+    let i = 1;
+    const gamesResponse = await loadGamesFromApi(profile);
+    for (const gameFromApi of gamesResponse) {
         /**
          * Create a stored game instance
          */
         const storedGame: StoredGame = {
-            id: gameResponse.id,
-            name: gameResponse.name,
+            id: gameFromApi.id,
+            name: gameFromApi.name,
             profileId: profile.profileId,
             hidden: false
         };
@@ -82,7 +84,8 @@ export const initialiseGamesThunk = (
         /**
          * Add a game to the state
          */
-        for (const achievementResponse of await loadAchievementsForGame(profile, game)) {
+        const achievementForGameResponse = await loadAchievementsForGame(profile, game);
+        for (const achievementResponse of achievementForGameResponse) {
 
             await wait(3);
 
@@ -110,7 +113,10 @@ export const initialiseGamesThunk = (
              */
             games[game.storedKey].achievements[achievement.storedKey] = achievement;
         }
-        dispatch(setGameProcessed(Object.keys(games).length));
+
+        dispatch(setGameProcessed(i));
+
+        i++;
     }
 
     dispatch(setGames(games));
