@@ -19,7 +19,7 @@ import {
     storeGame
 } from "@store/game/database";
 import {loadAchievementsForGame, loadGamesFromApi} from "@store/game/api";
-import {setGames, removeGames} from "@store/game/gameSlice";
+import {setGames, removeGames, setGameProcessed} from "@store/game/gameSlice";
 import {wait} from "@lib/util";
 
 export const initialiseGamesThunk = (
@@ -41,8 +41,11 @@ export const initialiseGamesThunk = (
      */
     if (doesProfileHaveStoredGames) {
         const games: Games = await loadGamesFromStorage(profile);
+        let i = 1;
         for (const game of Object.values(games)) {
             game.achievements = await loadAchievementsFromStorage(profile, game);
+            dispatch(setGameProcessed(i));
+            i++;
         }
         dispatch(setGames(games));
         return;
@@ -107,6 +110,7 @@ export const initialiseGamesThunk = (
              */
             games[game.storedKey].achievements[achievement.storedKey] = achievement;
         }
+        dispatch(setGameProcessed(Object.keys(games).length));
     }
 
     dispatch(setGames(games));

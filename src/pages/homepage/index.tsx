@@ -9,6 +9,8 @@ import {ResizableGrid} from "@components/ResizableGrid";
 import ProfileSelected from "./components/ProfileSelected";
 import {PotentialProfile} from "@store/types";
 import Loading from "@components/Loading";
+import LoadingGames from "./components/LoadingGames";
+import CompletedGamesGrid from "./components/CompletedGamesGrid";
 
 interface HomepageProps {
     profile: PotentialProfile;
@@ -17,7 +19,6 @@ export const Index = ({profile}: HomepageProps): ReactElement => {
 
     const dispatch = useDispatch<AppDispatch>();
 
-    const games = useSelector(getCompletedGamesSelector);
     const gamesAreLoading = useSelector(getLoadingSelector);
 
     useEffect(() => {
@@ -30,10 +31,9 @@ export const Index = ({profile}: HomepageProps): ReactElement => {
     if (profile === undefined) {
         children.push(<NoProfileSelected key="no-profile"/>);
     } else if (gamesAreLoading) {
-        children.push(<Loading key="loading"/>);
+        children.push(<LoadingGames key="loading-games" profile={profile}/>);
     } else {
-        children.push(<ProfileSelected gameCount={Object.keys(games).length} key="profile-selected"/>);
-        children.push(<ResizableGrid key="achievement-grid" games={games}/>);
+        children.push(<CompletedGamesGrid/>);
     }
 
     return (
