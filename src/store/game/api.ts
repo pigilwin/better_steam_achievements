@@ -1,4 +1,5 @@
 import {Game, Profile} from "@store/types";
+import {getJsonFromApiWithRetry} from "@lib/util";
 
 interface GameResponse {
     id: number;
@@ -26,27 +27,7 @@ export const loadGamesFromApi = async (profile: Profile): Promise<GamesResponse>
     return getJsonFromApiWithRetry(url);
 };
 
-
 export const loadAchievementsForGame = async (profile: Profile, game: Game): Promise<AchievementsResponse> => {
     const url = import.meta.env.VITE_API_URL + `/steam/${profile.profileId}/games/${game.id}`;
     return getJsonFromApiWithRetry(url);
-};
-
-const getJsonFromApiWithRetry = async <T>(url: string): Promise<T> => {
-    const wait = (seconds: number): Promise<void> => {
-        return new Promise((resolve) => window.setTimeout(resolve, seconds));
-    };
-
-    return new Promise<T>(async (resolve, reject) => {
-        let response = await window.fetch(url);
-        while (response.status === 429) {
-            const secondsToWait = Number.parseInt(response.headers.get('Retry-After') ?? '0') * 1000;
-            await wait(secondsToWait);
-            response = await window.fetch(url);
-        }
-        if (response.ok) {
-            resolve(await response.json());
-        }
-        reject('Failed to load api');
-    });
 };
