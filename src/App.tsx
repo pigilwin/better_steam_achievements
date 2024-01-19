@@ -6,7 +6,7 @@ import {
     Routes
 } from 'react-router-dom';
 
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppDispatch} from "./store";
 
 import {Index as Homepage} from './pages/homepage';
@@ -14,21 +14,23 @@ import {Index as Profiles} from './pages/profiles';
 
 import {NavigationBar} from 'components/NavigationBar';
 import {initialiseApplicationStateThunk} from "@store/application/thunk";
+import {getSelectedProfileSelector} from "@store/application/applicationSlice";
 
 export const App = (): ReactElement => {
 
     const dispatch = useDispatch<AppDispatch>();
+    const selectedProfile = useSelector(getSelectedProfileSelector);
 
     useEffect(() => {
         dispatch(initialiseApplicationStateThunk());
-    }, [dispatch]);
+    }, [selectedProfile !== undefined]);
 
     return (
         <main className="font-serif antialiased leading-normal tracking-wider bg-slate-300 min-h-screen">
             <BrowserRouter>
-                <NavigationBar/>
+                <NavigationBar profile={selectedProfile}/>
                 <Routes>
-                    <Route path="/" element={<Homepage/>}/>
+                    <Route path="/" element={<Homepage profile={selectedProfile}/>}/>
                     <Route path="/profiles" element={<Profiles/>}/>
                 </Routes>
             </BrowserRouter>

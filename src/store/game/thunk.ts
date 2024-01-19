@@ -20,15 +20,16 @@ import {
     loadAchievementsFromStorage
 } from "@store/game/database";
 import {loadGamesFromApi, loadAchievementsForGame} from "@store/game/api";
-import {addAchievementToGame, addGame, removeGames} from "@store/game/gameSlice";
+import {addAchievementToGame, addGame, removeGames, setLoading} from "@store/game/gameSlice";
 import {wait} from "@lib/util";
 
-export const initialiseGames = (
+export const initialiseGamesThunk = (
     profile: Profile
 ): AppThunk => async (
     dispatch: AppDispatch,
     getState: RootStateHook,
 ) => {
+
     /**
      * Remove all the games
      */
@@ -48,6 +49,7 @@ export const initialiseGames = (
                 dispatch(addAchievementToGame({game, achievement}));
             }
         }
+        dispatch(setLoading(false));
         return;
     }
 
@@ -110,4 +112,6 @@ export const initialiseGames = (
             dispatch(addAchievementToGame({game, achievement}));
         }
     }
+
+    dispatch(setLoading(false));
 }

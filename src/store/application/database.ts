@@ -22,7 +22,7 @@ export const createProfile = async (profile: Profile): Promise<Profile> => {
     return profile;
 };
 
-export const removeProfile = async (profile: Profile): Promise<void> => {
+export const deleteProfile = async (profile: Profile): Promise<void> => {
     const database = await openDatabase();
     const transaction = database.transaction('profiles', 'readwrite');
     const store = transaction.objectStore('profiles');

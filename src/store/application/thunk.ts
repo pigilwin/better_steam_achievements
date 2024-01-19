@@ -3,17 +3,17 @@ import {RootStateHook} from "../rootReducer";
 import {
     readProfiles,
     createProfile,
-    removeProfile
+    deleteProfile
 } from "./database";
 import {
     selectProfile,
     setProfiles,
     addProfile,
-    removeProfile as removeProfileDispatch,
+    removeProfile,
     unsetProfile
 } from "./applicationSlice";
 import {Profile} from "@store/types";
-import {initialiseGames} from "@store/game/thunk";
+import {initialiseGamesThunk} from "@store/game/thunk";
 
 const localStorageKey: string = 'selectedProfile';
 
@@ -44,7 +44,7 @@ export const initialiseApplicationStateThunk = (
         if (profile === undefined) {
             localStorage.removeItem(localStorageKey);
         } else {
-            dispatch(selectProfile(profile));
+            dispatch(selectProfileThunk(profile));
         }
     }
 }
@@ -73,7 +73,7 @@ export const selectProfileThunk = (profile: Profile): AppThunk => async (
 
     dispatch(selectProfile(profile));
 
-    dispatch(initialiseGames(profile));
+    dispatch(initialiseGamesThunk(profile));
 }
 
 export const unsetProfileThunk = (): AppThunk => async (
@@ -89,12 +89,12 @@ export const removeProfileThunk = (profile: Profile): AppThunk => async (
     dispatch: AppDispatch,
     getState: RootStateHook
 ) => {
-    await removeProfile(profile);
+    await deleteProfile(profile);
 
     const selectedProfile = getState().applicationReducer.profile;
     if (selectedProfile !== undefined) {
         dispatch(unsetProfile());
     }
 
-    dispatch(removeProfileDispatch(profile));
+    dispatch(removeProfile(profile));
 }
