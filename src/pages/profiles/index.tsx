@@ -14,6 +14,7 @@ import {
     selectProfileThunk,
     unsetProfileThunk
 } from "@store/application/thunk";
+import {useNavigate} from "react-router-dom";
 
 export const Index = (): ReactElement => {
     const profiles = useSelector(getProfilesSelector);
@@ -63,9 +64,11 @@ interface ProfileRowProps {
 const ProfileRow = ({profile, selected}: ProfileRowProps): ReactElement => {
 
     const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate();
 
     const selectProfileHandler = () => {
         dispatch(selectProfileThunk(profile));
+        navigate('/');
     };
 
     let button: ReactElement = <BlueButton buttonText="Select Profile" onClick={selectProfileHandler}/>
