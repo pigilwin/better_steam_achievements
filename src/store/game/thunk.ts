@@ -2,7 +2,6 @@ import {AppDispatch, AppThunk} from "@store/index";
 import {RootStateHook} from "@store/rootReducer";
 import {
     Achievement,
-    Achievements,
     Game,
     Games,
     LoadedGameProperties,
@@ -14,13 +13,13 @@ import {
 
 import {
     doesProfileHaveAnyGames,
+    loadAchievementsFromStorage,
     loadGamesFromStorage,
-    storeGame,
     storeAchievement,
-    loadAchievementsFromStorage
+    storeGame
 } from "@store/game/database";
-import {loadGamesFromApi, loadAchievementsForGame} from "@store/game/api";
-import {addAchievementToGame, addGame, removeGames, setLoading} from "@store/game/gameSlice";
+import {loadAchievementsForGame, loadGamesFromApi} from "@store/game/api";
+import {setGames, removeGames} from "@store/game/gameSlice";
 import {wait} from "@lib/util";
 
 export const initialiseGamesThunk = (
@@ -43,16 +42,13 @@ export const initialiseGamesThunk = (
     if (doesProfileHaveStoredGames) {
         const games: Games = await loadGamesFromStorage(profile);
         for (const game of Object.values(games)) {
-            dispatch(addGame(game));
-            const achievements: Achievements = await loadAchievementsFromStorage(profile, game);
-            for (const achievement of Object.values(achievements)) {
-                dispatch(addAchievementToGame({game, achievement}));
-            }
+            game.achievements = await loadAchievementsFromStorage(profile, game);
         }
-        dispatch(setLoading(false));
+        dispatch(setGames(games));
         return;
     }
 
+    const games: Games = {};
     for (const gameResponse of await loadGamesFromApi(profile)) {
         /**
          * Create a stored game instance
@@ -78,11 +74,11 @@ export const initialiseGamesThunk = (
             storedKey: storedKey
         });
 
+        games[game.storedKey] = game;
+
         /**
          * Add a game to the state
          */
-        dispatch(addGame(game));
-
         for (const achievementResponse of await loadAchievementsForGame(profile, game)) {
 
             await wait(3);
@@ -109,9 +105,9 @@ export const initialiseGamesThunk = (
             /**
              * Add the achievement to the game
              */
-            dispatch(addAchievementToGame({game, achievement}));
+            games[game.storedKey].achievements[achievement.storedKey] = achievement;
         }
     }
 
-    dispatch(setLoading(false));
+    dispatch(setGames(games));
 }
