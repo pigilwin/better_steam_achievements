@@ -33,7 +33,7 @@ export const Index = ({profile}: HomepageProps): ReactElement => {
     } else if (gamesAreLoading) {
         children.push(<LoadingGames key="loading-games" profile={profile}/>);
     } else {
-        children.push(<CompletedGamesGrid/>);
+        children.push(<CompletedGamesGrid key="completed-grid"/>);
     }
 
     return (
