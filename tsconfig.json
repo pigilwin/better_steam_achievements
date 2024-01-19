@@ -24,6 +24,7 @@
     "paths": {
       "@components/*": ["components/*"],
       "@store/*": ["store/*"],
+      "@lib/*": ["lib/*"]
     }
   },
   "exclude": [

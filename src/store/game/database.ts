@@ -2,7 +2,8 @@ import {
     Achievements,
     Game,
     Games,
-    LoadedGameProperties, LoadedStoredAchievement,
+    LoadedGameProperties,
+    LoadedStoredAchievement,
     Profile,
     StoredAchievement,
     StoredGame
@@ -11,52 +12,42 @@ import {openDatabase} from "@store/database";
 
 export const doesProfileHaveAnyGames = async (profile: Profile): Promise<boolean> => {
     const database = await openDatabase();
-    const transaction = database.transaction('games');
-    const store = transaction.objectStore('games');
-    const storedGames = await store.getAll();
-    const storedGamesForProfile = storedGames.filter((game) => {
-        return game.profileId === profile.profileId;
-    });
-    const hasGames = storedGamesForProfile.length > 0;
-    await transaction.done;
-    return hasGames;
+    try {
+        const gameCount = await database.countFromIndex('games', 'profileId', profile.profileId);
+        return gameCount > 0;
+    } catch (e) {
+        return false;
+    }
 }
 
 export const loadGamesFromStorage = async (profile: Profile): Promise<Games> => {
-    const games: Games = [];
+    const games: Games = {};
     const database = await openDatabase();
     const gamesTransaction = database.transaction('games');
     for await (const cursor of gamesTransaction.store) {
         if (cursor.value.profileId !== profile.profileId) {
             continue;
         }
-        const game: Game = Object.assign<StoredGame, LoadedGameProperties>(cursor.value, {
+        games[cursor.key] = Object.assign<StoredGame, LoadedGameProperties>(cursor.value, {
             storedKey: cursor.key,
-            achievements: []
+            achievements: {}
         });
-        games.push(game);
     }
     await gamesTransaction.done;
-
-    for (const game of games) {
-        game.achievements = await loadAchievementsFromStorage(profile, game);
-    }
-
     return games;
 };
 
 export const loadAchievementsFromStorage = async (profile: Profile, game: Game): Promise<Achievements> => {
-    const achievements: Achievements = [];
+    const achievements: Achievements = {};
     const database = await openDatabase();
     const achievementTransaction = database.transaction('achievements');
     for await (const cursor of achievementTransaction.store) {
         if (cursor.value.gameId !== game.id || cursor.value.profileId !== profile.profileId) {
             continue;
         }
-        const achievement = Object.assign<StoredAchievement, LoadedStoredAchievement>(cursor.value, {
+        achievements[cursor.key] = Object.assign<StoredAchievement, LoadedStoredAchievement>(cursor.value, {
             storedKey: cursor.key
         });
-        achievements.push(achievement);
     }
     await achievementTransaction.done;
     return achievements;
@@ -67,8 +58,8 @@ export const storeGame = async (game: StoredGame): Promise<string> => {
     const database = await openDatabase();
     const transaction = database.transaction('games', 'readwrite');
     const store = transaction.objectStore('games');
-    const key = game.profileId + '-' + game.id;
-    await store.put(game);
+    const key = createGameKey(game);
+    await store.put(game, key);
     await transaction.done;
     return key;
 };
@@ -78,11 +69,20 @@ export const storeAchievement = async (game: Game, achievement: StoredAchievemen
     const transaction = database.transaction('achievements', 'readwrite');
     const store = transaction.objectStore('achievements');
 
-    const key = game.profileId + '-' + game.id + '-' + achievement.id;
+    const key = createAchievementKey(game, achievement);
 
-    await store.put(achievement);
+    await store.put(achievement, key);
 
     await transaction.done;
 
     return key;
 }
+
+const createGameKey = (game: StoredGame): string => {
+    return game.profileId + '-' + game.id;
+};
+
+const createAchievementKey = (game: Game, achievement: StoredAchievement): string => {
+    const achievementId = achievement.id.toLowerCase().split(' ').join('-');
+    return game.profileId + '-' + game.id + '-' + achievementId;
+};

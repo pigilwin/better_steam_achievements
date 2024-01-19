@@ -26,9 +26,9 @@ export interface LoadedStoredAchievement {
 }
 
 export interface Game extends StoredGame, LoadedGameProperties {}
-export type Games = Game[];
+export type Games = Record<string, Game>;
 export interface Achievement extends StoredAchievement, LoadedStoredAchievement {}
-export type Achievements = Achievement[];
+export type Achievements = Record<string, Achievement>;
 
 export interface Profile {
     profileId: string;

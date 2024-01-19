@@ -2,6 +2,7 @@ import {AppDispatch, AppThunk} from "@store/index";
 import {RootStateHook} from "@store/rootReducer";
 import {
     Achievement,
+    Achievements,
     Game,
     Games,
     LoadedGameProperties,
@@ -11,9 +12,16 @@ import {
     StoredGame
 } from "@store/types";
 
-import {doesProfileHaveAnyGames, loadGamesFromStorage, storeGame, storeAchievement} from "@store/game/database";
+import {
+    doesProfileHaveAnyGames,
+    loadGamesFromStorage,
+    storeGame,
+    storeAchievement,
+    loadAchievementsFromStorage
+} from "@store/game/database";
 import {loadGamesFromApi, loadAchievementsForGame} from "@store/game/api";
-import {setGames, loadingGames} from "@store/game/gameSlice";
+import {addAchievementToGame, addGame, removeGames} from "@store/game/gameSlice";
+import {wait} from "@lib/util";
 
 export const initialiseGames = (
     profile: Profile
@@ -21,7 +29,10 @@ export const initialiseGames = (
     dispatch: AppDispatch,
     getState: RootStateHook,
 ) => {
-    dispatch(loadingGames());
+    /**
+     * Remove all the games
+     */
+    dispatch(removeGames());
 
     const doesProfileHaveStoredGames = await doesProfileHaveAnyGames(profile);
     /**
@@ -30,14 +41,17 @@ export const initialiseGames = (
      */
     if (doesProfileHaveStoredGames) {
         const games: Games = await loadGamesFromStorage(profile);
-        dispatch(setGames(games));
+        for (const game of Object.values(games)) {
+            dispatch(addGame(game));
+            const achievements: Achievements = await loadAchievementsFromStorage(profile, game);
+            for (const achievement of Object.values(achievements)) {
+                dispatch(addAchievementToGame({game, achievement}));
+            }
+        }
+        return;
     }
 
-    const gamesFromApi = await loadGamesFromApi(profile);
-    const games: Games = [];
-
-
-    for (const gameResponse of gamesFromApi) {
+    for (const gameResponse of await loadGamesFromApi(profile)) {
         /**
          * Create a stored game instance
          */
@@ -58,11 +72,19 @@ export const initialiseGames = (
          * create the game object
          */
         const game: Game = Object.assign<StoredGame, LoadedGameProperties>(storedGame, {
-            achievements: [],
+            achievements: {},
             storedKey: storedKey
         });
 
+        /**
+         * Add a game to the state
+         */
+        dispatch(addGame(game));
+
         for (const achievementResponse of await loadAchievementsForGame(profile, game)) {
+
+            await wait(3);
+
             const storedAchievement: StoredAchievement = {
                 id: achievementResponse.id,
                 name: achievementResponse.name,
@@ -82,9 +104,10 @@ export const initialiseGames = (
                 storedKey: storedKey
             });
 
-            game.achievements.push(achievement);
+            /**
+             * Add the achievement to the game
+             */
+            dispatch(addAchievementToGame({game, achievement}));
         }
     }
-
-    dispatch(setGames(games));
 }

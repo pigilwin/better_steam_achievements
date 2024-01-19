@@ -1,30 +1,35 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Games} from "@store/types";
+import {Achievement, Game, Games} from "@store/types";
 import {produce} from "immer";
 import {RootState} from "@store/rootReducer";
 
 interface GameState {
     games: Games,
-    loading: boolean
+    gamesHaveBeenLoaded: boolean,
 }
 export const initialState: GameState =  {
-    games: [],
-    loading: false,
+    games: {},
+    gamesHaveBeenLoaded: false,
 };
 
 const gameSlice = createSlice({
     name: 'game',
     initialState,
     reducers: {
-        loadingGames(state: GameState, action: PayloadAction<void>) {
+        removeGames(state: GameState, action: PayloadAction<void>) {
             return produce<GameState>(state, newState => {
-                newState.loading = true;
+                newState.games = {};
             });
         },
-        setGames(state: GameState, action: PayloadAction<Games>) {
+        addGame(state: GameState, action: PayloadAction<Game>) {
             return produce<GameState>(state, newState => {
-                newState.games = action.payload;
-                newState.loading = false;
+                newState.games[action.payload.storedKey] = action.payload;
+                newState.gamesHaveBeenLoaded = true;
+            });
+        },
+        addAchievementToGame(state: GameState, action: PayloadAction<{game: Game, achievement: Achievement}>) {
+            return produce<GameState>(state, newState => {
+                newState.games[action.payload.game.storedKey].achievements[action.payload.achievement.storedKey] = action.payload.achievement;
             });
         }
     }
@@ -33,9 +38,10 @@ const gameSlice = createSlice({
 export const reducer = gameSlice.reducer;
 
 export const {
-    setGames,
-    loadingGames,
+    addGame,
+    removeGames,
+    addAchievementToGame
 } = gameSlice.actions;
 
-export const getIsLoadingSelector = (state: RootState): boolean => state.gameReducer.loading;
 export const getGamesSelector = (state: RootState): Games => state.gameReducer.games;
+export const getHasGamesBeenLoadedSelector = (state: RootState): boolean => state.gameReducer.gamesHaveBeenLoaded;
