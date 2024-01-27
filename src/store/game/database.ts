@@ -59,7 +59,6 @@ export const loadAchievementsFromStorage = async (profile: Profile, game: Game):
     return achievements;
 };
 
-
 export const storeGame = async (game: StoredGame): Promise<string> => {
     const database = await openDatabase();
     const transaction = database.transaction('games', 'readwrite');
@@ -83,6 +82,30 @@ export const storeAchievement = async (game: Game, achievement: StoredAchievemen
 
     return key;
 }
+
+export const deleteGamesForProfile = async (profile: Profile): Promise<void> => {
+    const database = await openDatabase();
+    const transaction = database.transaction('games', 'readwrite');
+    const filter = IDBKeyRange.only(profile.profileId);
+    let cursor = await transaction.store.index('profileId').openKeyCursor(filter);
+    while (cursor) {
+        transaction.store.delete(cursor.primaryKey);
+        cursor = await cursor.continue();
+    }
+    await transaction.done;
+};
+
+export const deleteGamesAchievementsForProfile = async (profile: Profile): Promise<void> => {
+    const database = await openDatabase();
+    const transaction = database.transaction('achievements', 'readwrite');
+    const filter = IDBKeyRange.only(profile.profileId);
+    let cursor = await transaction.store.index('profileId').openKeyCursor(filter);
+    while (cursor) {
+        transaction.store.delete(cursor.primaryKey);
+        cursor = await cursor.continue();
+    }
+    await transaction.done;
+};
 
 const createGameKey = (profileId: string, id: number): string => {
     return profileId + '-' + id;

@@ -12,7 +12,8 @@ import {Profile} from "@store/types";
 import {
     removeProfileThunk,
     selectProfileThunk,
-    unsetProfileThunk
+    unsetProfileThunk,
+    clearCacheForProfileThunk
 } from "@store/application/thunk";
 import {useNavigate} from "react-router-dom";
 
@@ -79,6 +80,11 @@ const ProfileRow = ({profile, selected}: ProfileRowProps): ReactElement => {
         button = <GreenButton buttonText="Profile Selected" onClick={unSelectProfileHandler}/>
     }
 
+    const clearCacheProfileHandler = () => {
+        dispatch(clearCacheForProfileThunk(profile));
+        navigate('/');
+    };
+
     const deleteProfileHandler = () => {
         dispatch(removeProfileThunk(profile));
     };
@@ -93,6 +99,7 @@ const ProfileRow = ({profile, selected}: ProfileRowProps): ReactElement => {
             </span>
             <span className="w-full flex flex-row justify-end gap-2">
                 {button}
+                <RedButton buttonText="Recache" onClick={clearCacheProfileHandler}/>
                 <RedButton buttonText="Delete" onClick={deleteProfileHandler}/>
             </span>
         </span>

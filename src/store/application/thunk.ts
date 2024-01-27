@@ -14,6 +14,8 @@ import {
 } from "./applicationSlice";
 import {Profile} from "@store/types";
 import {initialiseGamesThunk} from "@store/game/thunk";
+import {removeGames} from "@store/game/gameSlice";
+import {deleteGamesAchievementsForProfile, deleteGamesForProfile} from "@store/game/database";
 
 const localStorageKey: string = 'selectedProfile';
 
@@ -97,4 +99,14 @@ export const removeProfileThunk = (profile: Profile): AppThunk => async (
     }
 
     dispatch(removeProfile(profile));
+}
+
+export const clearCacheForProfileThunk = (profile: Profile): AppThunk => async (
+    dispatch: AppDispatch,
+    getState: RootStateHook
+)=> {
+    await deleteGamesForProfile(profile);
+    await deleteGamesAchievementsForProfile(profile);
+    dispatch(removeGames());
+    dispatch(initialiseGamesThunk(profile));
 }

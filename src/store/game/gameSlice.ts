@@ -21,6 +21,8 @@ const gameSlice = createSlice({
         removeGames(state: GameState, action: PayloadAction<void>) {
             return produce<GameState>(state, newState => {
                 newState.games = {};
+                newState.gamesAreLoading = true;
+                newState.gameCount = 0;
             });
         },
         setGameProcessed(state: GameState, action: PayloadAction<number>) {
