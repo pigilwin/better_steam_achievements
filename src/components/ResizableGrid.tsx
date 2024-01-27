@@ -1,22 +1,13 @@
 import {ChangeEvent, ReactElement, useState} from "react";
-import {GameCard} from "@components/GameCard";
-import {Games} from "@store/types";
 import {Range} from "@components/Inputs";
 
 interface GridProps {
-    games: Games;
+    elements: ReactElement[],
+    rangeLabel: string
 }
 
-export const ResizableGrid = ({games}: GridProps): ReactElement => {
+export const ResizableGrid = ({elements, rangeLabel}: GridProps): ReactElement => {
     const [items, setItems] = useState<number>(3);
-
-    const cards = [];
-    for (const [key, value] of Object.entries(games)) {
-        cards.push(
-            <GameCard game={value} key={key}/>
-        );
-    }
-
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         setItems(Number.parseInt(event.currentTarget.value));
     };
@@ -49,18 +40,20 @@ export const ResizableGrid = ({games}: GridProps): ReactElement => {
     return (
         <>
             <article className="bg-white w-full p-2 rounded-md flex justify-end h-full gap-1">
-                <Range
-                    column={false}
-                    label="How many games per row?"
-                    onChange={onChange}
-                    id="games-per-row"
-                    value={items}
-                    min={1}
-                    max={5}
-                />
+                <span className="w-1/2">
+                    <Range
+                        column={false}
+                        label={rangeLabel}
+                        onChange={onChange}
+                        id="games-per-row"
+                        value={items}
+                        min={1}
+                        max={5}
+                    />
+                </span>
             </article>
             <article className={gridClasses.join(' ')}>
-                {cards}
+                {elements}
             </article>
         </>
     );
