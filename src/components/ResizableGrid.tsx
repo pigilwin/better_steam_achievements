@@ -50,6 +50,7 @@ export const ResizableGrid = ({games}: GridProps): ReactElement => {
         <>
             <article className="bg-white w-full p-2 rounded-md flex justify-end h-full gap-1">
                 <Range
+                    column={false}
                     label="How many games per row?"
                     onChange={onChange}
                     id="games-per-row"

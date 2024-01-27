@@ -1,13 +1,31 @@
-import {ChangeEventHandler, ReactElement} from "react";
+import {ChangeEventHandler, PropsWithChildren, ReactElement} from "react";
 
-interface InputProps {
-    label: string;
-    onChange: ChangeEventHandler<HTMLInputElement>,
-    id: string,
-    errorMessage: string | null,
-    value: string
+interface InputWrapper {
+    column: boolean;
 }
-export const Input = ({label, onChange, id, errorMessage, value}: InputProps): ReactElement => {
+const Wrapper = ({column, children}: PropsWithChildren<InputWrapper>): ReactElement => {
+    const classes = ['flex gap-2'];
+    if (column) {
+        classes.push('flex-col');
+    } else {
+        classes.push('flex-row');
+    }
+
+    return (
+        <span className={classes.join(' ')}>
+            {children}
+        </span>
+    );
+}
+
+interface InputProps extends InputWrapper {
+    label: string;
+    onChange: ChangeEventHandler<HTMLInputElement>;
+    id: string;
+    errorMessage: string | null;
+    value: string;
+}
+export const Input = ({label, onChange, id, errorMessage, value, column}: InputProps): ReactElement => {
 
     let error: ReactElement | null = null;
     if (errorMessage !== null) {
@@ -15,7 +33,7 @@ export const Input = ({label, onChange, id, errorMessage, value}: InputProps): R
     }
 
     return (
-        <span className="flex flex-col gap-2">
+        <Wrapper column={column}>
             <label className="p-2" htmlFor={id}>{label}</label>
             <input
                 id={id}
@@ -24,11 +42,11 @@ export const Input = ({label, onChange, id, errorMessage, value}: InputProps): R
                 value={value}
             />
             {error}
-        </span>
+        </Wrapper>
     );
 }
 
-interface RangeProps {
+interface RangeProps extends InputWrapper {
     label: string;
     onChange: ChangeEventHandler<HTMLInputElement>,
     id: string,
@@ -36,9 +54,9 @@ interface RangeProps {
     min: number,
     max: number
 }
-export const Range = ({label, onChange, id, value, min, max}: RangeProps): ReactElement => {
+export const Range = ({label, onChange, id, value, min, max, column}: RangeProps): ReactElement => {
     return (
-        <span className="flex flex-col gap-2">
+        <Wrapper column={column}>
             <label className="p-2" htmlFor={id}>{label}</label>
             <input
                 type="range"
@@ -50,6 +68,6 @@ export const Range = ({label, onChange, id, value, min, max}: RangeProps): React
                 className="text-sm sm:text-base relative w-full border rounded focus:border-indigo-400 focus:outline-none p-2"
             >
             </input>
-        </span>
+        </Wrapper>
     );
 };
