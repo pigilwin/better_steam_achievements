@@ -1,9 +1,10 @@
-import {ChangeEvent, ChangeEventHandler, ReactElement, useState} from "react";
+import {ChangeEvent, ReactElement, useState} from "react";
 import {BlueButton} from "@components/Buttons";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "@store/index";
 import {createProfileThunk as createProfileThunk} from "@store/application/thunk";
 import {Profiles} from "@store/types";
+import {Input} from "@components/Inputs";
 
 interface CreateProfileProps {
     onCreate: () => void;
@@ -64,31 +65,3 @@ export default ({onCreate, profiles}: CreateProfileProps): ReactElement => {
         </article>
     );
 };
-
-interface InputProps {
-    label: string;
-    onChange: ChangeEventHandler<HTMLInputElement>,
-    id: string,
-    errorMessage: string | null,
-    value: string
-}
-const Input = ({label, onChange, id, errorMessage, value}: InputProps): ReactElement => {
-
-    let error: ReactElement | null = null;
-    if (errorMessage !== null) {
-        error = <span className="p-2 border border-red-500">{errorMessage}</span>
-    }
-
-    return (
-        <span className="flex flex-col gap-2">
-            <label className="p-2" htmlFor={id}>{label}</label>
-            <input
-                id={id}
-                className="text-sm sm:text-base relative w-full border rounded placeholder-gray-400 focus:border-indigo-400 focus:outline-none p-2"
-                onChange={onChange}
-                value={value}
-            />
-            {error}
-        </span>
-    );
-}
