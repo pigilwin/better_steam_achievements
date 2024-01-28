@@ -17,18 +17,18 @@ export const Index = ({profile}: HomepageProps): ReactElement => {
 
     const dispatch = useDispatch<AppDispatch>();
 
-    const gamesAreLoading = useSelector(getLoadingSelector);
+    const loadingState = useSelector(getLoadingSelector);
 
     useEffect(() => {
-        if (profile !== undefined) {
+        if (profile !== undefined && loadingState === GameLoadingState.notLoaded) {
             dispatch(initialiseGamesThunk(profile));
         }
-    }, [profile, gamesAreLoading === GameLoadingState.notLoaded]);
+    }, [profile, loadingState]);
 
     const children: ReactElement[] = [];
     if (profile === undefined) {
         children.push(<NoProfileSelected key="no-profile"/>);
-    } else if (gamesAreLoading === GameLoadingState.loading) {
+    } else if (loadingState === GameLoadingState.loading) {
         children.push(<LoadingGames key="loading-games" profile={profile}/>);
     } else {
         children.push(<CompletedGamesGrid key="completed-grid"/>);

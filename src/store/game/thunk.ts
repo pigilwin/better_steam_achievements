@@ -29,11 +29,6 @@ export const initialiseGamesThunk = (
     getState: RootStateHook,
 ) => {
 
-    /**
-     * Remove all the games
-     */
-    dispatch(removeGames());
-
     const doesProfileHaveStoredGames = await doesProfileHaveAnyGames(profile);
     /**
      * This is all going to be loaded from the cache so the API doesn't have to be called

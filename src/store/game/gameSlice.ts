@@ -29,6 +29,7 @@ const gameSlice = createSlice({
         setGameProcessed(state: GameState, action: PayloadAction<number>) {
             return produce<GameState>(state, newState => {
                 newState.gameCount = action.payload;
+                newState.loadingState = GameLoadingState.loading;
             });
         },
         setGames(state: GameState, action: PayloadAction<Games>) {
