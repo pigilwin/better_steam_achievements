@@ -40,17 +40,15 @@ export const ResizableGrid = ({elements, rangeLabel}: GridProps): ReactElement =
     return (
         <>
             <article className="bg-white w-full p-2 rounded-md flex justify-end h-full gap-1">
-                <span className="w-1/2">
-                    <Range
-                        column={false}
-                        label={rangeLabel}
-                        onChange={onChange}
-                        id="games-per-row"
-                        value={items}
-                        min={1}
-                        max={5}
-                    />
-                </span>
+                <Range
+                    column={false}
+                    label={rangeLabel}
+                    onChange={onChange}
+                    id="games-per-row"
+                    value={items}
+                    min={1}
+                    max={5}
+                />
             </article>
             <article className={gridClasses.join(' ')}>
                 {elements}

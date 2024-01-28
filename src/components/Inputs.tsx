@@ -65,7 +65,7 @@ export const Range = ({label, onChange, id, value, min, max, column}: RangeProps
                 id={id}
                 onChange={onChange}
                 value={value}
-                className="text-sm sm:text-base relative w-full border rounded focus:border-indigo-400 focus:outline-none p-2"
+                className="text-sm sm:text-base relative border rounded focus:border-indigo-400 focus:outline-none p-2"
             >
             </input>
         </Wrapper>

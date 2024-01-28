@@ -13,9 +13,9 @@ export default ({games}: ProfileSelectedProps): ReactElement => {
     }
 
     return (
-        <article className="flex flex-col items-center justify-center bg-white w-full p-2 rounded-md">
-            <h2 className="text-xl">{gameCount} games have been fully completed</h2>
-            <p className="text-sm">A total of {achievementCount} achievements have been acquired.</p>
+        <article className="flex flex-row items-center justify-between bg-white w-full p-2 rounded-md">
+            <h2 className="text-2xl">{gameCount} games have been fully completed.</h2>
+            <p className="text-2xl">A total of {achievementCount} achievements have been acquired.</p>
         </article>
     );
 };
