@@ -2,16 +2,17 @@ import {createSelector, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {Games} from "@store/types";
 import {produce} from "immer";
 import {RootState} from "@store/rootReducer";
+import {GameLoadingState} from "@store/game/types";
 
 interface GameState {
     games: Games,
-    gamesAreLoading: boolean,
+    loadingState: GameLoadingState,
     gameCount: number
 }
 export const initialState: GameState =  {
     games: {},
     gameCount: 0,
-    gamesAreLoading: true,
+    loadingState: GameLoadingState.notLoaded,
 };
 
 const gameSlice = createSlice({
@@ -21,7 +22,7 @@ const gameSlice = createSlice({
         removeGames(state: GameState, action: PayloadAction<void>) {
             return produce<GameState>(state, newState => {
                 newState.games = {};
-                newState.gamesAreLoading = true;
+                newState.loadingState = GameLoadingState.notLoaded;
                 newState.gameCount = 0;
             });
         },
@@ -33,7 +34,7 @@ const gameSlice = createSlice({
         setGames(state: GameState, action: PayloadAction<Games>) {
             return produce<GameState>(state, newState => {
                 newState.games = action.payload;
-                newState.gamesAreLoading = false;
+                newState.loadingState = GameLoadingState.loaded;
             });
         },
     }
@@ -47,7 +48,7 @@ export const {
     setGameProcessed
 } = gameSlice.actions;
 
-export const getLoadingSelector = (state: RootState): boolean => state.gameReducer.gamesAreLoading;
+export const getLoadingSelector = (state: RootState): GameLoadingState => state.gameReducer.loadingState;
 export const getProcessedGames = (state: RootState): number => state.gameReducer.gameCount;
 
 export const getGames = (state: RootState): Games => state.gameReducer.games;

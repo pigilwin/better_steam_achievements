@@ -2,15 +2,13 @@ import {ReactElement, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 
 import NoProfileSelected from 'pages/homepage/components/NoProfileSelected';
-import {getCompletedGamesSelector, getLoadingSelector} from "@store/game/gameSlice";
+import {getLoadingSelector} from "@store/game/gameSlice";
 import {AppDispatch} from "@store/index";
 import {initialiseGamesThunk} from "@store/game/thunk";
-import {ResizableGrid} from "@components/ResizableGrid";
-import ProfileSelected from "./components/ProfileSelected";
 import {PotentialProfile} from "@store/types";
-import Loading from "@components/Loading";
 import LoadingGames from "./components/LoadingGames";
 import CompletedGamesGrid from "./components/CompletedGamesGrid";
+import {GameLoadingState} from "@store/game/types";
 
 interface HomepageProps {
     profile: PotentialProfile;
@@ -25,12 +23,12 @@ export const Index = ({profile}: HomepageProps): ReactElement => {
         if (profile !== undefined) {
             dispatch(initialiseGamesThunk(profile));
         }
-    }, [profile === undefined]);
+    }, [profile, gamesAreLoading === GameLoadingState.notLoaded]);
 
     const children: ReactElement[] = [];
     if (profile === undefined) {
         children.push(<NoProfileSelected key="no-profile"/>);
-    } else if (gamesAreLoading) {
+    } else if (gamesAreLoading === GameLoadingState.loading) {
         children.push(<LoadingGames key="loading-games" profile={profile}/>);
     } else {
         children.push(<CompletedGamesGrid key="completed-grid"/>);
