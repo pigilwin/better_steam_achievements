@@ -19,9 +19,6 @@ interface AchievementResponse {
 }
 type AchievementsResponse = AchievementResponse[];
 
-//https://cdn.akamai.steamstatic.com/steam/apps/50/library_hero.jpg - Hero Url
-//https://cdn.cloudflare.steamstatic.com/steam/apps/50/logo.png - Logo Url
-
 export const loadGamesFromApi = async (profile: Profile): Promise<GamesResponse> => {
     const url = import.meta.env.VITE_API_URL + `/steam/${profile.profileId}/games`;
     return getJsonFromApiWithRetry(url);

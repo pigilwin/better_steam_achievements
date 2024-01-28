@@ -12,7 +12,7 @@ import {AppDispatch} from "./store";
 import {Index as Homepage} from './pages/homepage';
 import {Index as Profiles} from './pages/profiles';
 
-import {NavigationBar} from 'components/NavigationBar';
+import {NavigationBar} from './pages/shared/NavigationBar';
 import {initialiseApplicationStateThunk} from "@store/application/thunk";
 import {getSelectedProfileSelector} from "@store/application/applicationSlice";
 
