@@ -1,10 +1,8 @@
 # Better Steam Achievements
 
-## How the application should work
- - Load the application and initialise the state.
- - Check if the `cookie` exists for the selected profile.
- - - If the cookie exists then load the profile based on the cookie if the cookie is a valid profile.
- - - If no cookie has been found and profiles exist the show the profile selection screen
- - - If no profiles exist then show the page to create a new profile with a small blurb explaining how the application works.
- - Once a profile has been loaded
- 
+## Things that need to be done
+ - [ ] Games with no achievements should be automatically hidden
+ - [ ] Add the list of achievements to the game page
+ - [ ] Allow games to be hidden based on a selector
+ - [ ] Display a progress bar to show how far we have completed the game?
+ - [ ] Add a 10 remaining achievements games to go?
