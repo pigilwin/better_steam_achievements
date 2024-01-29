@@ -23,6 +23,10 @@ export const NavigationBar = ({profile}: NavigationBarProps): ReactElement => {
         navigate('/settings');
     };
 
+    const openGamesHandler = () => {
+        navigate('/games');
+    };
+
     let profilesButton = <BlueButton buttonText="Profiles" onClick={openProfilesHandler}/>;
     if (profile !== undefined) {
         profilesButton = <GreenButton buttonText={"Selected Profile: " + profile.profileId} onClick={openProfilesHandler}/>;
@@ -36,6 +40,7 @@ export const NavigationBar = ({profile}: NavigationBarProps): ReactElement => {
             <ApiConnectionChecker/>
             <span className="w-full flex flex-row items-center justify-end h-full gap-3">
                 <BlueButton buttonText="Homepage" onClick={openHomepageHandler}/>
+                <BlueButton buttonText="Games" onClick={openGamesHandler}/>
                 {profilesButton}
                 <BlueButton buttonText="Settings" onClick={openSettingsHandler}/>
             </span>
