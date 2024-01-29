@@ -1,5 +1,5 @@
 import {createSelector, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Games} from "@store/types";
+import {Game, Games} from "@store/types";
 import {produce} from "immer";
 import {RootState} from "@store/rootReducer";
 import {GameLoadingState} from "@store/game/types";
@@ -79,3 +79,5 @@ export const getCompletedGamesSelector= createSelector(getGames, (games) => {
     }
     return completedGames;
 });
+
+export const getGameSelector = (state: RootState, storedKey: string): Game => state.gameReducer.games[storedKey];
