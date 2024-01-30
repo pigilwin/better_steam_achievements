@@ -16,10 +16,11 @@ import {
     loadAchievementsFromStorage,
     loadGamesFromStorage,
     storeAchievement,
-    storeGame
+    storeGame,
+    updateGame
 } from "@store/game/database";
 import {loadAchievementsForGame, loadGamesFromApi} from "@store/game/api";
-import {setGames, removeGames, setGameProcessed} from "@store/game/gameSlice";
+import {setGames, setGameProcessed} from "@store/game/gameSlice";
 import {wait} from "@lib/util";
 
 export const initialiseGamesThunk = (
@@ -107,6 +108,18 @@ export const initialiseGamesThunk = (
              * Add the achievement to the game
              */
             games[game.storedKey].achievements[achievement.storedKey] = achievement;
+        }
+
+        const gameWithAchievements = games[game.storedKey];
+        if (Object.keys(gameWithAchievements.achievements).length === 0) {
+            const storedGame: StoredGame = {
+                name: gameWithAchievements.name,
+                id: gameWithAchievements.id,
+                profileId: gameWithAchievements.profileId,
+                hidden: true,
+            };
+            await updateGame(gameWithAchievements.storedKey, storedGame);
+            gameWithAchievements.hidden = true;
         }
 
         dispatch(setGameProcessed(i));
