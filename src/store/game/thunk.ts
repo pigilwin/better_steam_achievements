@@ -1,15 +1,5 @@
 import {AppDispatch, AppThunk} from "@store/index";
 import {RootStateHook} from "@store/rootReducer";
-import {
-    Achievement,
-    Game,
-    Games,
-    LoadedGameProperties,
-    LoadedStoredAchievement,
-    Profile,
-    StoredAchievement,
-    StoredGame
-} from "@store/types";
 
 import {
     doesProfileHaveAnyGames,
@@ -22,6 +12,9 @@ import {
 import {loadAchievementsForGame, loadGamesFromApi} from "@store/game/api";
 import {setGames, setGameProcessed} from "@store/game/gameSlice";
 import {wait} from "@lib/util";
+import {Profile} from "@store/application/profile";
+import {createStoredGame, Games, gameToStoredGame, storedGameToGame} from "@store/game/game";
+import {createStoredAchievement, storedAchievementToAchievement} from "@store/game/achievement";
 
 export const initialiseGamesThunk = (
     profile: Profile
@@ -54,12 +47,12 @@ export const initialiseGamesThunk = (
         /**
          * Create a stored game instance
          */
-        const storedGame: StoredGame = {
-            id: gameFromApi.id,
-            name: gameFromApi.name,
-            profileId: profile.profileId,
-            hidden: false
-        };
+        const storedGame = createStoredGame(
+            gameFromApi.id,
+            gameFromApi.name,
+            false,
+            profile.profileId
+        );
 
         /**
          * Store the game and return the generated key we used to keep a cache of this
@@ -70,11 +63,11 @@ export const initialiseGamesThunk = (
          * Now the game has been stored, lets merge the properties with the additional properties to
          * create the game object
          */
-        const game: Game = Object.assign<StoredGame, LoadedGameProperties>(storedGame, {
-            achievements: {},
-            storedKey: storedKey
-        });
+        const game = storedGameToGame(storedGame, storedKey, {});
 
+        /**
+         * Save the game
+         */
         games[game.storedKey] = game;
 
         /**
@@ -85,25 +78,21 @@ export const initialiseGamesThunk = (
 
             await wait(3);
 
-            const storedAchievement: StoredAchievement = {
-                id: achievementResponse.id,
-                name: achievementResponse.name,
-                description: achievementResponse.description,
-                completed: achievementResponse.completed,
-                unlockTime: achievementResponse.unlockTime,
-                iconUrl: achievementResponse.iconUrl,
-                grayIconUrl: achievementResponse.grayIconUrl,
-                hidden: achievementResponse.hidden,
-                profileId: profile.profileId,
-                gameId: game.id
-            };
+            const storedAchievement = createStoredAchievement(
+                achievementResponse.id,
+                achievementResponse.name,
+                achievementResponse.description,
+                achievementResponse.completed,
+                achievementResponse.unlockTime,
+                achievementResponse.iconUrl,
+                achievementResponse.grayIconUrl,
+                achievementResponse.hidden,
+                profile.profileId,
+                game.id
+            );
 
             const storedKey = await storeAchievement(game, storedAchievement);
-
-            const achievement: Achievement = Object.assign<StoredAchievement, LoadedStoredAchievement>(storedAchievement, {
-                storedKey: storedKey
-            });
-
+            const achievement = storedAchievementToAchievement(storedAchievement, storedKey);
             /**
              * Add the achievement to the game
              */
@@ -112,12 +101,8 @@ export const initialiseGamesThunk = (
 
         const gameWithAchievements = games[game.storedKey];
         if (Object.keys(gameWithAchievements.achievements).length === 0) {
-            const storedGame: StoredGame = {
-                name: gameWithAchievements.name,
-                id: gameWithAchievements.id,
-                profileId: gameWithAchievements.profileId,
-                hidden: true,
-            };
+            const storedGame = gameToStoredGame(game);
+            storedGame.hidden = true;
             await updateGame(gameWithAchievements.storedKey, storedGame);
             gameWithAchievements.hidden = true;
         }

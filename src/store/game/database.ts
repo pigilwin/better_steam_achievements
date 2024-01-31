@@ -1,14 +1,12 @@
+import {openDatabase} from "@store/database";
+import {Profile} from "@store/application/profile";
+import {createGameKey, Game, Games, StoredGame, storedGameToGame} from "@store/game/game";
 import {
     Achievements,
-    Game,
-    Games,
-    LoadedGameProperties,
-    LoadedStoredAchievement,
-    Profile,
+    createAchievementKey,
     StoredAchievement,
-    StoredGame
-} from "@store/types";
-import {openDatabase} from "@store/database";
+    storedAchievementToAchievement
+} from "@store/game/achievement";
 
 export const doesProfileHaveAnyGames = async (profile: Profile): Promise<boolean> => {
     const database = await openDatabase();
@@ -28,10 +26,7 @@ export const loadGamesFromStorage = async (profile: Profile): Promise<Games> => 
     let cursor = await gamesTransaction.store.index('profileId').openCursor(filter);
     while(cursor) {
         const key = createGameKey(profile.profileId, cursor.value.id);
-        games[key] = Object.assign<StoredGame, LoadedGameProperties>(cursor.value, {
-            storedKey: key,
-            achievements: {}
-        });
+        games[key] = storedGameToGame(cursor.value, key, {});
         cursor = await cursor.continue();
     }
     await gamesTransaction.done;
@@ -50,9 +45,7 @@ export const loadAchievementsFromStorage = async (profile: Profile, game: Game):
             continue;
         }
         const key = createAchievementKey(achievement.profileId, achievement.gameId, achievement.id);
-        achievements[key] = Object.assign<StoredAchievement, LoadedStoredAchievement>(cursor.value, {
-            storedKey: key
-        });
+        achievements[key] = storedAchievementToAchievement(cursor.value, key);
         cursor = await cursor.continue();
     }
     await achievementTransaction.done;
@@ -114,13 +107,4 @@ export const deleteGamesAchievementsForProfile = async (profile: Profile): Promi
         cursor = await cursor.continue();
     }
     await transaction.done;
-};
-
-const createGameKey = (profileId: string, id: number): string => {
-    return profileId + '-' + id;
-};
-
-const createAchievementKey = (profileId: string, id: number, achievementId: string): string => {
-    const achievementIdFiltered = achievementId.toLowerCase().split(' ').join('-');
-    return profileId + '-' + id + '-' + achievementIdFiltered;
 };
