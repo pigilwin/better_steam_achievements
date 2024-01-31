@@ -1,8 +1,8 @@
 import {ReactElement} from "react";
-import {Profile} from "@store/types";
 import {useSelector} from "react-redux";
 import {getProcessedGames} from "@store/game/gameSlice";
 import Loading from "@components/Loading";
+import {Profile} from "@store/application/profile";
 
 interface LoadingGamesProps {
     profile: Profile

@@ -1,14 +1,13 @@
 import {ReactElement, useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-
 import NoProfileSelected from 'pages/homepage/components/NoProfileSelected';
 import {getLoadingSelector} from "@store/game/gameSlice";
 import {AppDispatch} from "@store/index";
 import {initialiseGamesThunk} from "@store/game/thunk";
-import {PotentialProfile} from "@store/types";
 import LoadingGames from "./components/LoadingGames";
 import CompletedGamesGrid from "./components/CompletedGamesGrid";
 import {GameLoadingState} from "@store/game/types";
+import {PotentialProfile} from "@store/application/profile";
 
 interface HomepageProps {
     profile: PotentialProfile;

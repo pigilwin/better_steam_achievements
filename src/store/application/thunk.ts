@@ -12,10 +12,10 @@ import {
     removeProfile,
     unsetProfile
 } from "./applicationSlice";
-import {Profile} from "@store/types";
 import {initialiseGamesThunk} from "@store/game/thunk";
 import {removeGames} from "@store/game/gameSlice";
 import {deleteGamesAchievementsForProfile, deleteGamesForProfile} from "@store/game/database";
+import {Profile} from "@store/application/profile";
 
 const localStorageKey: string = 'selectedProfile';
 

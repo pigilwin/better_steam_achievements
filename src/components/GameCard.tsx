@@ -1,5 +1,5 @@
-import { Game } from "store/types";
 import {ReactElement} from "react";
+import {Game} from "@store/game/game";
 
 interface GameCardProps {
     game: Game;

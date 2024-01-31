@@ -3,8 +3,8 @@ import {BlueButton} from "@components/Buttons";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "@store/index";
 import {createProfileThunk as createProfileThunk} from "@store/application/thunk";
-import {Profiles} from "@store/types";
 import {Input} from "@components/Inputs";
+import {Profiles} from "@store/application/profile";
 
 interface CreateProfileProps {
     onCreate: () => void;
@@ -60,6 +60,7 @@ export default ({onCreate, profiles}: CreateProfileProps): ReactElement => {
                 onChange={onChangeHandler}
                 errorMessage={errorMessage}
                 value={possibleSteamId}
+                column={true}
             />
             <BlueButton buttonText="Create Profile" onClick={createProfile}/>
         </article>

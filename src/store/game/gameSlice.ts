@@ -1,8 +1,8 @@
 import {createSelector, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {Game, Games} from "@store/types";
 import {produce} from "immer";
 import {RootState} from "@store/rootReducer";
 import {GameLoadingState} from "@store/game/types";
+import {Game, Games} from "@store/game/game";
 
 interface GameState {
     games: Games,

@@ -1,5 +1,7 @@
 import { DBSchema, IDBPDatabase, openDB } from 'idb';
-import { Profile, StoredAchievement, StoredGame } from './types';
+import {StoredGame} from "@store/game/game";
+import {StoredAchievement} from "@store/game/achievement";
+import {Profile} from "@store/application/profile";
 
 export const openDatabase = async (): Promise<IDBPDatabase<BetterSteamAchievementsSchema>> => {
     return await openDB<BetterSteamAchievementsSchema>('better-steam-achievements', 1, {

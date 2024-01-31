@@ -2,7 +2,7 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {produce} from 'immer';
 
 import {RootState} from "../rootReducer";
-import {PotentialProfile, Profile, Profiles} from "../types";
+import {PotentialProfile, Profile, Profiles} from "@store/application/profile";
 
 interface ApplicationState {
     profile: PotentialProfile,

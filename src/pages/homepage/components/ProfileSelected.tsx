@@ -1,5 +1,5 @@
 import {ReactElement} from "react";
-import {Games} from "@store/types";
+import {Games} from "@store/game/game";
 
 interface ProfileSelectedProps {
     games: Games;

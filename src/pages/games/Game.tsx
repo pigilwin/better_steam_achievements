@@ -1,10 +1,11 @@
 import {ReactElement} from "react";
-import {Game, PotentialProfile} from "@store/types";
 import {useNavigate, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {getGameSelector} from "@store/game/gameSlice";
 import {RootState} from "@store/rootReducer";
 import {GameCard} from "@components/GameCard";
+import {PotentialProfile} from "@store/application/profile";
+import {Game} from "@store/game/game";
 
 interface GameProps {
     profile: PotentialProfile

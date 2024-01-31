@@ -7,7 +7,6 @@ import {
 import {BlueButton, GreenButton, RedButton} from "@components/Buttons";
 import CreateProfile from "./components/CreateProfile";
 import {AppDispatch} from "@store/index";
-import {Profile} from "@store/types";
 
 import {
     removeProfileThunk,
@@ -16,6 +15,7 @@ import {
     clearCacheForProfileThunk
 } from "@store/application/thunk";
 import {useNavigate} from "react-router-dom";
+import {Profile} from "@store/application/profile";
 
 export const Index = (): ReactElement => {
     const profiles = useSelector(getProfilesSelector);

@@ -1,5 +1,5 @@
-import {Profile, Profiles} from "../types";
 import {openDatabase} from "../database";
+import {Profile, Profiles} from "@store/application/profile";
 
 /**
  * Get all the profiles stored within the application
