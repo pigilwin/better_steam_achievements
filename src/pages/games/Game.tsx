@@ -1,4 +1,4 @@
-import {ReactElement} from "react";
+import {ReactElement, useEffect} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {getGameSelector} from "@store/game/gameSlice";
@@ -6,6 +6,7 @@ import {RootState} from "@store/rootReducer";
 import {GameCard} from "@components/GameCard";
 import {PotentialProfile} from "@store/application/profile";
 import {Game} from "@store/game/game";
+import {GameProgressBar} from "./components/GameProgressBar";
 
 interface GameProps {
     profile: PotentialProfile
@@ -15,8 +16,16 @@ export const Index = ({profile}: GameProps): ReactElement | null => {
     const {gameId} = useParams();
     const navigate = useNavigate();
 
-    if (gameId === undefined || profile === undefined) {
-        navigate('/');
+    useEffect(() => {
+        if (gameId === undefined || profile === undefined) {
+            navigate('/');
+        }
+    }, [gameId, profile, navigate]);
+
+    /**
+     * If game id is undefined then lets return null
+     */
+    if (gameId === undefined) {
         return null;
     }
 
@@ -24,7 +33,8 @@ export const Index = ({profile}: GameProps): ReactElement | null => {
 
     return (
         <section className="flex flex-col gap-2 m-4">
-            <GameCard game={game} onClickHandler={() =>{}}/>
+            <GameCard key="game-card" game={game} onClickHandler={() =>{}}/>
+            <GameProgressBar key="game-progress-bar" achievements={game.achievements}/>
         </section>
     );
 };
