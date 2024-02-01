@@ -4,7 +4,7 @@ interface InputWrapper {
     column: boolean;
 }
 const Wrapper = ({column, children}: PropsWithChildren<InputWrapper>): ReactElement => {
-    const classes = ['flex gap-2'];
+    const classes = ['flex gap-2 items-center'];
     if (column) {
         classes.push('flex-col');
     } else {
@@ -72,24 +72,24 @@ export const Range = ({label, onChange, id, value, min, max, column}: RangeProps
     );
 };
 
-interface ToggleSwitchProps {
+interface ToggleSwitchProps extends InputWrapper {
     value: boolean;
     title: string;
     onChange: ChangeEventHandler<HTMLInputElement>;
 }
-export const ToggleSwitch = ({title, onChange, value}: ToggleSwitchProps): ReactElement => {
+export const ToggleSwitch = ({title, onChange, value, column}: ToggleSwitchProps): ReactElement => {
     return (
-        <div className="flex flex-col">
+        <Wrapper column={column}>
             <div className="ml-3 text-xl">{title}</div>
             <div className="toggle-switch flex flex-col p-4">
                 <label className="flex items-center cursor-pointer">
                     <div className="relative">
-                        <input onChange={onChange} checked={value} type="checkbox" className="hidden" />
+                        <input onChange={onChange} checked={value} type="checkbox" className="hidden"/>
                         <div className="toggle__line w-10 h-4 bg-white rounded-full shadow-inner"></div>
                         <div className="toggle__dot absolute w-6 h-6 bg-white rounded-full shadow inset-y-0 left-0"></div>
                     </div>
                 </label>
             </div>
-        </div>
+        </Wrapper>
     );
 }
