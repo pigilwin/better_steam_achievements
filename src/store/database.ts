@@ -1,22 +1,22 @@
 import { DBSchema, IDBPDatabase, openDB } from 'idb';
-import {StoredGame} from "@store/game/game";
-import {StoredAchievement} from "@store/game/achievement";
-import {Profile} from "@store/application/profile";
+import {StoredGame} from '@store/game/game';
+import {StoredAchievement} from '@store/game/achievement';
+import {Profile} from '@store/application/profile';
 
 export const openDatabase = async (): Promise<IDBPDatabase<BetterSteamAchievementsSchema>> => {
-    return await openDB<BetterSteamAchievementsSchema>('better-steam-achievements', 1, {
-        upgrade: (db: IDBPDatabase<BetterSteamAchievementsSchema>) => {
-            const gameStore = db.createObjectStore('games');
-            gameStore.createIndex('profileId','profileId');
+	return await openDB<BetterSteamAchievementsSchema>('better-steam-achievements', 1, {
+		upgrade: (db: IDBPDatabase<BetterSteamAchievementsSchema>) => {
+			const gameStore = db.createObjectStore('games');
+			gameStore.createIndex('profileId','profileId');
 
-            const achievementStore = db.createObjectStore('achievements');
-            achievementStore.createIndex('gameId','gameId');
-            achievementStore.createIndex('profileId','profileId');
+			const achievementStore = db.createObjectStore('achievements');
+			achievementStore.createIndex('gameId','gameId');
+			achievementStore.createIndex('profileId','profileId');
 
-            db.createObjectStore('profiles');
-        }
-    });
-}
+			db.createObjectStore('profiles');
+		}
+	});
+};
 
 export interface BetterSteamAchievementsSchema extends DBSchema {
     'games': {

@@ -1,6 +1,6 @@
-import {getJsonFromApiWithRetry} from "@lib/util";
-import {Game} from "@store/game/game";
-import {Profile} from "@store/application/profile";
+import {getJsonFromApiWithRetry} from '@lib/util';
+import {Game} from '@store/game/game';
+import {Profile} from '@store/application/profile';
 
 interface GameResponse {
     id: number;
@@ -21,11 +21,11 @@ interface AchievementResponse {
 type AchievementsResponse = AchievementResponse[];
 
 export const loadGamesFromApi = async (profile: Profile): Promise<GamesResponse> => {
-    const url = import.meta.env.VITE_API_URL + `/steam/${profile.profileId}/games`;
-    return getJsonFromApiWithRetry<GamesResponse>(url);
+	const url = import.meta.env.VITE_API_URL + `/steam/${profile.profileId}/games`;
+	return getJsonFromApiWithRetry<GamesResponse>(url);
 };
 
 export const loadAchievementsForGame = async (profile: Profile, game: Game): Promise<AchievementsResponse> => {
-    const url = import.meta.env.VITE_API_URL + `/steam/${profile.profileId}/games/${game.id}`;
-    return getJsonFromApiWithRetry<AchievementsResponse>(url);
+	const url = import.meta.env.VITE_API_URL + `/steam/${profile.profileId}/games/${game.id}`;
+	return getJsonFromApiWithRetry<AchievementsResponse>(url);
 };

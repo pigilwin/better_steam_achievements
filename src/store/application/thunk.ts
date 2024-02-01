@@ -1,21 +1,21 @@
-import {AppDispatch, AppThunk} from "../index";
-import {RootStateHook} from "../rootReducer";
+import {AppDispatch, AppThunk} from '../index';
+import {RootStateHook} from '../rootReducer';
 import {
-    readProfiles,
-    createProfile,
-    deleteProfile
-} from "./database";
+	readProfiles,
+	createProfile,
+	deleteProfile
+} from './database';
 import {
-    selectProfile,
-    setProfiles,
-    addProfile,
-    removeProfile,
-    unsetProfile
-} from "./applicationSlice";
-import {initialiseGamesThunk} from "@store/game/thunk";
-import {removeGames} from "@store/game/gameSlice";
-import {deleteGamesAchievementsForProfile, deleteGamesForProfile} from "@store/game/database";
-import {Profile} from "@store/application/profile";
+	selectProfile,
+	setProfiles,
+	addProfile,
+	removeProfile,
+	unsetProfile
+} from './applicationSlice';
+import {initialiseGamesThunk} from '@store/game/thunk';
+import {removeGames} from '@store/game/gameSlice';
+import {deleteGamesAchievementsForProfile, deleteGamesForProfile} from '@store/game/database';
+import {Profile} from '@store/application/profile';
 
 const localStorageKey: string = 'selectedProfile';
 
@@ -24,89 +24,84 @@ const localStorageKey: string = 'selectedProfile';
  */
 export const initialiseApplicationStateThunk = (
 ): AppThunk => async (
-    dispatch: AppDispatch,
-    getState: RootStateHook,
+	dispatch: AppDispatch,
 ) => {
-    const selectedProfile = localStorage.getItem(localStorageKey);
-    const profiles = await readProfiles();
+	const selectedProfile = localStorage.getItem(localStorageKey);
+	const profiles = await readProfiles();
 
-    /**
+	/**
      * Load the profiles into the application once they have been loaded
      */
-    dispatch(setProfiles(profiles));
+	dispatch(setProfiles(profiles));
 
-    /**
+	/**
      * If the local storage key is set then lets see if it's a valid profile
      */
-    if (selectedProfile !== null) {
-        const profile = profiles.find((profile) => {
-            return profile.profileId === selectedProfile;
-        });
+	if (selectedProfile !== null) {
+		const profile = profiles.find((profile) => {
+			return profile.profileId === selectedProfile;
+		});
 
-        if (profile === undefined) {
-            localStorage.removeItem(localStorageKey);
-        } else {
-            dispatch(selectProfileThunk(profile));
-        }
-    }
-}
+		if (profile === undefined) {
+			localStorage.removeItem(localStorageKey);
+		} else {
+			dispatch(selectProfileThunk(profile));
+		}
+	}
+};
 
 export const createProfileThunk = (profileId: string): AppThunk => async (
-    dispatch: AppDispatch,
-    getState: RootStateHook
+	dispatch: AppDispatch,
 ) => {
-    const profile = await createProfile({profileId: profileId});
-    /**
+	const profile = await createProfile({profileId: profileId});
+	/**
      * Add this profile to the list
      */
-    dispatch(addProfile(profile));
-}
+	dispatch(addProfile(profile));
+};
 
 /**
  * Select a profile within the system
  * @param {Profile} profile
  */
 export const selectProfileThunk = (profile: Profile): AppThunk => async (
-    dispatch: AppDispatch,
-    getState: RootStateHook
+	dispatch: AppDispatch,
 )=> {
 
-    localStorage.setItem(localStorageKey, profile.profileId);
+	localStorage.setItem(localStorageKey, profile.profileId);
 
-    dispatch(selectProfile(profile));
+	dispatch(selectProfile(profile));
 
-    dispatch(initialiseGamesThunk(profile));
-}
+	dispatch(initialiseGamesThunk(profile));
+};
 
 export const unsetProfileThunk = (): AppThunk => async (
-    dispatch: AppDispatch,
-    getState: RootStateHook
+	dispatch: AppDispatch,
 ) => {
-    localStorage.removeItem(localStorageKey);
+	localStorage.removeItem(localStorageKey);
 
-    dispatch(unsetProfile());
-}
+	dispatch(unsetProfile());
+};
 
 export const removeProfileThunk = (profile: Profile): AppThunk => async (
-    dispatch: AppDispatch,
-    getState: RootStateHook
+	dispatch: AppDispatch,
+	getState: RootStateHook
 ) => {
-    await deleteProfile(profile);
+	await deleteProfile(profile);
 
-    const selectedProfile = getState().applicationReducer.profile;
-    if (selectedProfile !== undefined) {
-        dispatch(unsetProfile());
-    }
+	const selectedProfile = getState().applicationReducer.profile;
+	if (selectedProfile !== undefined) {
+		dispatch(unsetProfile());
+	}
 
-    dispatch(removeProfile(profile));
-}
+	dispatch(removeProfile(profile));
+};
 
 export const clearCacheForProfileThunk = (profile: Profile): AppThunk => async (
-    dispatch: AppDispatch,
-    getState: RootStateHook
+	dispatch: AppDispatch,
 )=> {
-    await deleteGamesForProfile(profile);
-    await deleteGamesAchievementsForProfile(profile);
-    dispatch(removeGames());
-    dispatch(initialiseGamesThunk(profile));
-}
+	await deleteGamesForProfile(profile);
+	await deleteGamesAchievementsForProfile(profile);
+	dispatch(removeGames());
+	dispatch(initialiseGamesThunk(profile));
+};
