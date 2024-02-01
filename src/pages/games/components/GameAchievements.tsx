@@ -55,7 +55,7 @@ export const GameAchievements = ({achievements}: GameAchievementsProps): ReactEl
 					column={false}
 				/>
 			</div>
-			<div className="w-full flex flex-col gap-2 p-2">
+			<div className="w-full flex flex-col gap-2">
 				{achievementElements}
 			</div>
 		</>

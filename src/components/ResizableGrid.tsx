@@ -1,17 +1,12 @@
-import {ChangeEvent, ReactElement, useState} from 'react';
+import {ChangeEventHandler, ReactElement} from 'react';
 import {Range} from '@components/Inputs';
 
 interface GridProps {
     elements: ReactElement[],
-    rangeLabel: string
+    howManyToShow: number
 }
 
-export const ResizableGrid = ({elements, rangeLabel}: GridProps): ReactElement => {
-	const [items, setItems] = useState<number>(3);
-	const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-		setItems(Number.parseInt(event.currentTarget.value));
-	};
-
+export const ResizableGrid = ({elements, howManyToShow}: GridProps): ReactElement => {
 	const possibleClasses: Record<number, string> = {
 		1: 'grid-cols-1',
 		2: 'grid-cols-2',
@@ -33,26 +28,31 @@ export const ResizableGrid = ({elements, rangeLabel}: GridProps): ReactElement =
 		'p-2',
 		'rounded-md',
 		'grid',
-		possibleClasses[items],
+		possibleClasses[howManyToShow],
 		'gap-4'
 	];
 
 	return (
-		<>
-			<article className="bg-white w-full p-2 rounded-md flex justify-end h-full gap-1">
-				<Range
-					column={false}
-					label={rangeLabel}
-					onChange={onChange}
-					id="games-per-row"
-					value={items}
-					min={1}
-					max={5}
-				/>
-			</article>
-			<article className={gridClasses.join(' ')}>
-				{elements}
-			</article>
-		</>
+		<article className={gridClasses.join(' ')}>
+			{elements}
+		</article>
+	);
+};
+
+interface ResizableGridToggleSwitchProps {
+	howManyToShow: number,
+	onChange: ChangeEventHandler<HTMLInputElement>,
+}
+export const ResizableGridToggleSwitch = ({howManyToShow, onChange}: ResizableGridToggleSwitchProps): ReactElement => {
+	return (
+		<Range
+			column={false}
+			label="How many columns to show?"
+			onChange={onChange}
+			id="games-per-row"
+			value={howManyToShow}
+			min={1}
+			max={5}
+		/>
 	);
 };
