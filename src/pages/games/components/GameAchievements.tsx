@@ -41,7 +41,7 @@ export const GameAchievements = ({achievements}: GameAchievementsProps): ReactEl
 
 	return (
 		<>
-			<div className="w-full flex flex-row gap-2 p-2 bg-white rounded-md">
+			<article className="w-full flex flex-row gap-2 p-2 bg-white rounded-md">
 				<ToggleSwitch
 					value={showHidden}
 					title="Show hidden?"
@@ -54,10 +54,10 @@ export const GameAchievements = ({achievements}: GameAchievementsProps): ReactEl
 					onChange={changeNotUnlockedHandler}
 					column={false}
 				/>
-			</div>
-			<div className="w-full flex flex-col gap-2">
+			</article>
+			<article className="w-full flex flex-col gap-2">
 				{achievementElements}
-			</div>
+			</article>
 		</>
 	);
 };

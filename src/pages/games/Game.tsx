@@ -8,6 +8,7 @@ import {PotentialProfile} from '@store/application/profile';
 import {Game} from '@store/game/game';
 import {GameProgressBar} from './components/GameProgressBar';
 import {GameAchievements} from './components/GameAchievements';
+import {GameAttributes} from './components/GameAttributes';
 
 interface GameProps {
     profile: PotentialProfile
@@ -36,6 +37,7 @@ export const Index = ({profile}: GameProps): ReactElement | null => {
 		<section className="flex flex-col gap-2 m-4">
 			<GameCard key="game-card" game={game} onClickHandler={() =>{}}/>
 			<GameProgressBar key="game-progress-bar" achievements={game.achievements}/>
+			<GameAttributes key="game-attributes" game={game}/>
 			<GameAchievements key="game-achievements" achievements={game.achievements}/>
 		</section>
 	);

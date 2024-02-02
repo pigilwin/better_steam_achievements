@@ -8,11 +8,12 @@ import {
 	updateGame
 } from '@store/game/database';
 import {loadAchievementsForGame, loadGamesFromApi} from '@store/game/api';
-import {setGames, setGameProcessed} from '@store/game/gameSlice';
+import {setGames, setGameProcessed, setHiddenForGame} from '@store/game/gameSlice';
 import {wait} from '@lib/util';
 import {Profile} from '@store/application/profile';
 import {createStoredGame, Games, gameToStoredGame, storedGameToGame} from '@store/game/game';
 import {createStoredAchievement, storedAchievementToAchievement} from '@store/game/achievement';
+import {RootStateHook} from '@store/rootReducer';
 
 export const initialiseGamesThunk = (
 	profile: Profile
@@ -110,4 +111,29 @@ export const initialiseGamesThunk = (
 	}
 
 	dispatch(setGames(games));
+};
+
+export const updateGameHiddenThunk = (
+	storedKey: string,
+	hidden: boolean
+): AppThunk => async (
+	dispatch: AppDispatch,
+	getState: RootStateHook
+) => {
+	const game = getState().gameReducer.games[storedKey];
+	const storedGame = gameToStoredGame(game);
+	storedGame.hidden = hidden;
+
+	/**
+	 * Update the game with the hidden attribute
+	 */
+	await updateGame(storedKey, gameToStoredGame(game));
+
+	/**
+	 * Update the store
+	 */
+	dispatch(setHiddenForGame({
+		storedKey,
+		hidden
+	}));
 };

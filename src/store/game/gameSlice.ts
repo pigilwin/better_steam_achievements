@@ -9,6 +9,12 @@ interface GameState {
     loadingState: GameLoadingState,
     gameCount: number
 }
+
+interface GameHiddenInterface {
+	storedKey: string;
+	hidden: boolean;
+}
+
 export const initialState: GameState =  {
 	games: {},
 	gameCount: 0,
@@ -38,6 +44,11 @@ const gameSlice = createSlice({
 				newState.loadingState = GameLoadingState.loaded;
 			});
 		},
+		setHiddenForGame(state: GameState, action: PayloadAction<GameHiddenInterface>) {
+			return produce<GameState>(state, newState => {
+				newState.games[action.payload.storedKey].hidden = action.payload.hidden;
+			});
+		}
 	}
 });
 
@@ -46,7 +57,8 @@ export const reducer = gameSlice.reducer;
 export const {
 	setGames,
 	removeGames,
-	setGameProcessed
+	setGameProcessed,
+	setHiddenForGame
 } = gameSlice.actions;
 
 export const getLoadingSelector = (state: RootState): GameLoadingState => state.gameReducer.loadingState;
