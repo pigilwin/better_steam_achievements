@@ -42,8 +42,18 @@ export const CompletedGamesGrid = (): ReactElement => {
 
 	return (
 		<>
-			<TitleWithButtons key="title-with-buttons" titles={titles} inputs={inputs}/>
-			<ResizableGrid howManyToShow={howManyToShow} elements={cards} key="resizable-grid"/>
+			<TitleWithButtons
+				key="title-with-buttons"
+				titles={titles}
+				inputs={inputs}
+				columnForInputs={false}
+				columnForTitles={true}
+			/>
+			<ResizableGrid
+				howManyToShow={howManyToShow}
+				elements={cards}
+				key="resizable-grid"
+			/>
 		</>
 	);
 };

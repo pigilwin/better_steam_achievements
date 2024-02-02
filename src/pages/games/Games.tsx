@@ -69,8 +69,18 @@ export const Index = ({profile}: GameProps): ReactElement | null => {
 
 	return (
 		<section className="flex flex-col gap-2 m-4">
-			<TitleWithButtons key="title-with-buttons" titles={titles} inputs={inputs}/>
-			<ResizableGrid elements={cards} howManyToShow={howManyToShow} key="resizable-grid"/>
+			<TitleWithButtons
+				key="title-with-buttons"
+				titles={titles}
+				inputs={inputs}
+				columnForTitles={true}
+				columnForInputs={false}
+			/>
+			<ResizableGrid
+				elements={cards}
+				howManyToShow={howManyToShow}
+				key="resizable-grid"
+			/>
 		</section>
 	);
 };
