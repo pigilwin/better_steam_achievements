@@ -23,9 +23,7 @@ export const ResizableGrid = ({elements, howManyToShow}: GridProps): ReactElemen
 	};
 
 	const gridClasses: string[] = [
-		'bg-white',
 		'w-full',
-		'p-2',
 		'rounded-md',
 		'grid',
 		possibleClasses[howManyToShow],
