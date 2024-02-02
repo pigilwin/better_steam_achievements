@@ -69,6 +69,14 @@ export const getGames = (state: RootState): Games => state.gameReducer.games;
 export const getCompletedGamesSelector= createSelector(getGames, (games) => {
 	const completedGames: Games = {};
 	for (const [key, value] of Object.entries(games)) {
+
+		/**
+		 * If the game is hidden then don't add it to the list
+		 */
+		if (value.hidden) {
+			continue;
+		}
+
 		const achievements = Object.values(value.achievements);
 		const completedAchievements = achievements.filter(s => s.completed);
 

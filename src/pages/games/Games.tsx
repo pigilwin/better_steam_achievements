@@ -8,6 +8,7 @@ import {ResizableGrid, ResizableGridToggleSwitch} from '@components/ResizableGri
 import {PotentialProfile} from '@store/application/profile';
 import {Games} from '@store/game/game';
 import {TitleWithButtons} from '@components/TitleWithButtons';
+import {ToggleSwitch} from '@components/Inputs';
 
 interface GameProps {
     profile: PotentialProfile
@@ -15,6 +16,7 @@ interface GameProps {
 export const Index = ({profile}: GameProps): ReactElement | null => {
 
 	const navigate = useNavigate();
+	const [hidden, setHidden] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (profile === undefined) {
@@ -27,6 +29,11 @@ export const Index = ({profile}: GameProps): ReactElement | null => {
 
 	const cards = [];
 	for (const [key, value] of Object.entries(games)) {
+
+		if (!hidden && value.hidden) {
+			continue;
+		}
+
 		const onGameSelectedHandler = () => {
 			navigate(`/games/${value.storedKey}`);
 		};
@@ -38,12 +45,26 @@ export const Index = ({profile}: GameProps): ReactElement | null => {
 	const howManyToShowHandler = (event: ChangeEvent<HTMLInputElement>) => {
 		setHowManyToShow(Number.parseInt(event.currentTarget.value));
 	};
+	const hiddenGamesHandler = (event: ChangeEvent<HTMLInputElement>) => {
+		setHidden(event.currentTarget.checked);
+	};
 
 	const titles: ReactElement[] = [
 		<h2 key="title" className="text-2xl">All Games</h2>,
 	];
 	const inputs: ReactElement[] = [
-		<ResizableGridToggleSwitch key="toggle-switch" howManyToShow={howManyToShow} onChange={howManyToShowHandler}/>
+		<ResizableGridToggleSwitch
+			key="resizable-grid-toggle-switch"
+			howManyToShow={howManyToShow}
+			onChange={howManyToShowHandler}
+		/>,
+		<ToggleSwitch
+			key="hidden-toggle-switch"
+			value={hidden}
+			title="Show hidden games?"
+			onChange={hiddenGamesHandler}
+			column={false}
+		/>
 	];
 
 	return (
