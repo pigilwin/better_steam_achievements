@@ -12,7 +12,7 @@ export const GameProgressBar = ({achievements}: GameProgressBarProps) => {
 		return (100 * howMuch) / totalValue;
 	};
 
-	const amount = percentage(completed.length, values.length);
+	const amount = Math.floor(percentage(completed.length, values.length));
 	const style = {width: `${amount}%`};
 
 	return (

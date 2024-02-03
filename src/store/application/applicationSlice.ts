@@ -39,6 +39,14 @@ const applicationSlice = createSlice({
 				});
 				profiles.push(action.payload);
 				newState.profiles = profiles;
+
+				/**
+				 * Reload the currently selected profile if its updated
+				 */
+				if (newState.profile !== null && newState.profile.profileId === action.payload.profileId) {
+					newState.profile = action.payload;
+				}
+
 			});
 		},
 		unsetProfile(state: ApplicationState) {
