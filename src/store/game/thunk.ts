@@ -127,7 +127,7 @@ export const updateGameHiddenThunk = (
 	/**
 	 * Update the game with the hidden attribute
 	 */
-	await updateGame(storedKey, gameToStoredGame(game));
+	await updateGame(storedKey, storedGame);
 
 	/**
 	 * Update the store
