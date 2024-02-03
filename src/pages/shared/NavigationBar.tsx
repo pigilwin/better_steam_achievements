@@ -27,9 +27,15 @@ export const NavigationBar = ({profile}: NavigationBarProps): ReactElement => {
 		navigate('/games');
 	};
 
-	let profilesButton = <BlueButton buttonText="Profiles" onClick={openProfilesHandler}/>;
-	if (profile !== undefined) {
-		profilesButton = <GreenButton buttonText={'Selected Profile: ' + profile.profileId} onClick={openProfilesHandler}/>;
+	let profilesButton = <BlueButton
+		buttonText="Profiles"
+		onClick={openProfilesHandler}
+	/>;
+	if (profile !== null) {
+		profilesButton = <GreenButton
+			buttonText={'Selected Profile: ' + profile.profileId}
+			onClick={openProfilesHandler}
+		/>;
 	}
 
 	return (

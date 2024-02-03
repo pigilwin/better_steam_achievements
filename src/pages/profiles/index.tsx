@@ -40,7 +40,7 @@ export const Index = (): ReactElement => {
 		children.push(<CreateProfile key="create-profile" onCreate={onCreateHandler} profiles={profiles}/>);
 	} else {
 		for (const profile of profiles) {
-			const selected = selectedProfile !== undefined && selectedProfile.profileId === profile.profileId;
+			const selected = selectedProfile !== null && selectedProfile.profileId === profile.profileId;
 			children.push(<ProfileRow key={profile.profileId} profile={profile} selected={selected}/>);
 		}
 	}

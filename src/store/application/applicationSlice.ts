@@ -9,7 +9,7 @@ interface ApplicationState {
     profiles: Profiles
 }
 export const initialState: ApplicationState =  {
-	profile: undefined,
+	profile: null,
 	profiles: []
 };
 
@@ -32,9 +32,18 @@ const applicationSlice = createSlice({
 				newState.profiles.push(action.payload);
 			});
 		},
+		updateProfile(state: ApplicationState, action: PayloadAction<Profile>) {
+			return produce<ApplicationState>(state, newState => {
+				const profiles = state.profiles.filter((profile) => {
+					return action.payload.profileId !== profile.profileId;
+				});
+				profiles.push(action.payload);
+				newState.profiles = profiles;
+			});
+		},
 		unsetProfile(state: ApplicationState) {
 			return produce<ApplicationState>(state, newState => {
-				newState.profile = undefined;
+				newState.profile = null;
 			});
 		},
 		removeProfile(state: ApplicationState, action: PayloadAction<Profile>) {
@@ -53,6 +62,7 @@ export const {
 	selectProfile,
 	setProfiles,
 	addProfile,
+	updateProfile,
 	unsetProfile,
 	removeProfile
 } = applicationSlice.actions;

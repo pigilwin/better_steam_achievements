@@ -19,7 +19,7 @@ export const Index = ({profile}: GameProps): ReactElement | null => {
 	const [hidden, setHidden] = useState<boolean>(false);
 
 	useEffect(() => {
-		if (profile === undefined) {
+		if (profile === null) {
 			navigate('/');
 		}
 	}, [profile, navigate]);

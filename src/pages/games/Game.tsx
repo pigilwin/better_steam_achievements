@@ -19,7 +19,7 @@ export const Index = ({profile}: GameProps): ReactElement | null => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (gameId === undefined || profile === undefined) {
+		if (gameId === undefined || profile === null) {
 			navigate('/');
 		}
 	}, [gameId, profile, navigate]);

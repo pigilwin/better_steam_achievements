@@ -19,13 +19,13 @@ export const Index = ({profile}: HomepageProps): ReactElement => {
 	const loadingState = useSelector(getLoadingSelector);
 
 	useEffect(() => {
-		if (profile !== undefined && loadingState === GameLoadingState.notLoaded) {
+		if (profile !== null && loadingState === GameLoadingState.notLoaded) {
 			dispatch(initialiseGamesThunk(profile));
 		}
 	}, [profile, loadingState]);
 
 	const children: ReactElement[] = [];
-	if (profile === undefined) {
+	if (profile === null) {
 		children.push(<NoProfileSelected key="no-profile"/>);
 	} else if (loadingState === GameLoadingState.loading) {
 		children.push(<LoadingGames key="loading-games" profile={profile}/>);

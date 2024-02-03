@@ -90,7 +90,7 @@ export const removeProfileThunk = (profile: Profile): AppThunk => async (
 	await deleteProfile(profile);
 
 	const selectedProfile = getState().applicationReducer.profile;
-	if (selectedProfile !== undefined) {
+	if (selectedProfile !== null) {
 		dispatch(unsetProfile());
 	}
 

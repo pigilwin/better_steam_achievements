@@ -25,7 +25,7 @@ export const App = (): ReactElement => {
 
 	useEffect(() => {
 		dispatch(initialiseApplicationStateThunk());
-	}, [selectedProfile !== undefined]);
+	}, [selectedProfile !== null]);
 
 	return (
 		<main className="font-serif antialiased leading-normal tracking-wider bg-slate-300 min-h-screen">
