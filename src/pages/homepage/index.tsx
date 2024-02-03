@@ -30,7 +30,7 @@ export const Index = ({profile}: HomepageProps): ReactElement => {
 	} else if (loadingState === GameLoadingState.loading) {
 		children.push(<LoadingGames key="loading-games" profile={profile}/>);
 	} else {
-		children.push(<CompletedGamesGrid key="completed-grid"/>);
+		children.push(<CompletedGamesGrid key="completed-grid" profile={profile}/>);
 	}
 
 	return (

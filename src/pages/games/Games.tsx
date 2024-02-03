@@ -1,14 +1,16 @@
 import {ChangeEvent, ReactElement, useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {getGames} from '@store/game/gameSlice';
 import {RootState} from '@store/rootReducer';
 import {GameCard} from '@components/GameCard';
 import {ResizableGrid, ResizableGridToggleSwitch} from '@components/ResizableGrid';
-import {PotentialProfile} from '@store/application/profile';
+import {PotentialProfile, Profile} from '@store/application/profile';
 import {Games} from '@store/game/game';
 import {TitleWithButtons} from '@components/TitleWithButtons';
 import {ToggleSwitch} from '@components/Inputs';
+import {updateProfileThunk} from '@store/application/thunk';
+import {AppDispatch} from '@store/index';
 
 interface GameProps {
     profile: PotentialProfile
@@ -16,6 +18,7 @@ interface GameProps {
 export const Index = ({profile}: GameProps): ReactElement | null => {
 
 	const navigate = useNavigate();
+	const dispatch = useDispatch<AppDispatch>();
 	const [hidden, setHidden] = useState<boolean>(false);
 
 	useEffect(() => {
@@ -43,7 +46,9 @@ export const Index = ({profile}: GameProps): ReactElement | null => {
 	}
 
 	const howManyToShowHandler = (event: ChangeEvent<HTMLInputElement>) => {
-		setHowManyToShow(Number.parseInt(event.currentTarget.value));
+		const number = Number.parseInt(event.currentTarget.value);
+		dispatch(updateProfileThunk(profile as Profile, number));
+		setHowManyToShow(number);
 	};
 	const hiddenGamesHandler = (event: ChangeEvent<HTMLInputElement>) => {
 		setHidden(event.currentTarget.checked);

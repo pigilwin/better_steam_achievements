@@ -1,14 +1,21 @@
 import {ChangeEvent, ReactElement, useState} from 'react';
 import {ResizableGrid, ResizableGridToggleSwitch} from '@components/ResizableGrid';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {getCompletedGamesSelector} from '@store/game/gameSlice';
 import {GameCard} from '@components/GameCard';
 import {useNavigate} from 'react-router-dom';
 import {TitleWithButtons} from '@components/TitleWithButtons';
+import {updateProfileThunk} from '@store/application/thunk';
+import {Profile} from '@store/application/profile';
+import {AppDispatch} from '@store/index';
 
-export const CompletedGamesGrid = (): ReactElement => {
+interface CompletedGamesGridProfile {
+	profile: Profile;
+}
+export const CompletedGamesGrid = ({profile}: CompletedGamesGridProfile): ReactElement => {
 	const games = useSelector(getCompletedGamesSelector);
 	const navigate = useNavigate();
+	const dispatch = useDispatch<AppDispatch>();
 
 	const [howManyToShow, setHowManyToShow] = useState(3);
 
@@ -29,7 +36,9 @@ export const CompletedGamesGrid = (): ReactElement => {
 	}
 
 	const howManyToShowHandler = (event: ChangeEvent<HTMLInputElement>) => {
-		setHowManyToShow(Number.parseInt(event.currentTarget.value));
+		const number = Number.parseInt(event.currentTarget.value);
+		dispatch(updateProfileThunk(profile, number));
+		setHowManyToShow(number);
 	};
 
 	const titles: ReactElement[] = [

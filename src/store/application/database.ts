@@ -13,7 +13,7 @@ export const readProfiles = async () : Promise<Profiles> => {
 	return profiles;
 };
 
-export const createProfile = async (profile: Profile): Promise<Profile> => {
+export const createOrUpdateProfile = async (profile: Profile): Promise<Profile> => {
 	const database = await openDatabase();
 	const transaction = database.transaction('profiles', 'readwrite');
 	const store = transaction.objectStore('profiles');

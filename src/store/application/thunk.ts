@@ -2,13 +2,14 @@ import {AppDispatch, AppThunk} from '../index';
 import {RootStateHook} from '../rootReducer';
 import {
 	readProfiles,
-	createProfile,
+	createOrUpdateProfile,
 	deleteProfile
 } from './database';
 import {
 	selectProfile,
 	setProfiles,
 	addProfile,
+	updateProfile,
 	removeProfile,
 	unsetProfile
 } from './applicationSlice';
@@ -53,7 +54,7 @@ export const initialiseApplicationStateThunk = (
 export const createProfileThunk = (profileId: string): AppThunk => async (
 	dispatch: AppDispatch,
 ) => {
-	const profile = await createProfile({profileId: profileId});
+	const profile = await createOrUpdateProfile({profileId: profileId, howManyColumnsToShow: 3});
 	/**
      * Add this profile to the list
      */
@@ -73,6 +74,22 @@ export const selectProfileThunk = (profile: Profile): AppThunk => async (
 	dispatch(selectProfile(profile));
 
 	dispatch(initialiseGamesThunk(profile));
+};
+
+export const updateProfileThunk = (
+	profile: Profile,
+	howManyColumnsToShow: number
+): AppThunk => async (
+	dispatch: AppDispatch
+)=> {
+	const newProfile: Profile = {
+		profileId: profile.profileId,
+		howManyColumnsToShow
+	};
+
+	await createOrUpdateProfile(newProfile);
+
+	dispatch(updateProfile(newProfile));
 };
 
 export const unsetProfileThunk = (): AppThunk => async (
