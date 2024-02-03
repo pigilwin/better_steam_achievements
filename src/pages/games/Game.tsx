@@ -32,13 +32,18 @@ export const Index = ({profile}: GameProps): ReactElement | null => {
 	}
 
 	const game = useSelector<RootState, Game>(state => getGameSelector(state, gameId));
+	const children: ReactElement[] = [
+		<GameCard key="game-card" game={game} onClickHandler={() =>{}}/>,
+		<GameAttributes key="game-attributes" game={game}/>
+	];
+	if (Object.keys(game.achievements).length > 0) {
+		children.push(<GameProgressBar key="game-progress-bar" achievements={game.achievements}/>);
+		children.push(<GameAchievements key="game-achievements" achievements={game.achievements}/>);
+	}
 
 	return (
 		<section className="flex flex-col gap-2 m-4">
-			<GameCard key="game-card" game={game} onClickHandler={() =>{}}/>
-			<GameProgressBar key="game-progress-bar" achievements={game.achievements}/>
-			<GameAttributes key="game-attributes" game={game}/>
-			<GameAchievements key="game-achievements" achievements={game.achievements}/>
+			{children}
 		</section>
 	);
 };
