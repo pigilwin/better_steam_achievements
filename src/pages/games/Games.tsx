@@ -27,7 +27,9 @@ export const Index = ({profile}: GameProps): ReactElement | null => {
 		}
 	}, [profile, navigate]);
 
-	const [howManyToShow, setHowManyToShow] = useState(3);
+	const [howManyToShow, setHowManyToShow] = useState(
+		(profile as Profile).howManyColumnsToShow
+	);
 	const games = useSelector<RootState, Games>(state => getGames(state));
 
 	const cards = [];

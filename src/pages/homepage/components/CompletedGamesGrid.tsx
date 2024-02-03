@@ -17,7 +17,9 @@ export const CompletedGamesGrid = ({profile}: CompletedGamesGridProfile): ReactE
 	const navigate = useNavigate();
 	const dispatch = useDispatch<AppDispatch>();
 
-	const [howManyToShow, setHowManyToShow] = useState(3);
+	const [howManyToShow, setHowManyToShow] = useState(
+		profile.howManyColumnsToShow
+	);
 
 	let gameCount = 0;
 	let achievementCount = 0;
