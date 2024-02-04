@@ -21,3 +21,15 @@ export const getJsonFromApiWithRetry = async <T>(url: string): Promise<T> => {
 		}
 	});
 };
+
+/**
+ * Calculate the percentage of how much the `value` is of the `totalValue`.
+ * This will floor the output.
+ *
+ * @param {number} value
+ * @param {number} totalValue
+ * @return {number}
+ */
+export const percentage = (value: number, totalValue: number): number => {
+	return Math.floor((100 * value) / totalValue);
+};

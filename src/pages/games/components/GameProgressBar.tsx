@@ -1,18 +1,12 @@
-import {Achievements} from '@store/game/achievement';
+import {Game} from '@store/game/game';
+import {getTotalCompletionPercentageOfGame} from '@store/game/aggregates';
 
 interface GameProgressBarProps {
-    achievements: Achievements
+	game: Game
 }
-export const GameProgressBar = ({achievements}: GameProgressBarProps) => {
+export const GameProgressBar = ({game}: GameProgressBarProps) => {
 
-	const values = Object.values(achievements);
-	const completed = values.filter(ach => ach.completed);
-
-	const percentage = (howMuch: number, totalValue: number): number => {
-		return (100 * howMuch) / totalValue;
-	};
-
-	const amount = Math.floor(percentage(completed.length, values.length));
+	const amount = getTotalCompletionPercentageOfGame(game);
 	const style = {width: `${amount}%`};
 
 	return (
