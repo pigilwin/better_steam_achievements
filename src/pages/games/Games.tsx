@@ -11,6 +11,7 @@ import {TitleWithButtons} from '@components/TitleWithButtons';
 import {ToggleSwitch} from '@components/Inputs';
 import {updateProfileThunk} from '@store/application/thunk';
 import {AppDispatch} from '@store/index';
+import {getTotalCompletionPercentageOfGame} from '@store/game/aggregates';
 
 interface GameProps {
     profile: PotentialProfile
@@ -20,6 +21,7 @@ export const Index = ({profile}: GameProps): ReactElement => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch<AppDispatch>();
 	const [hidden, setHidden] = useState<boolean>(false);
+	const [onlyShow10PercentToGo, setOnlyShow10PercentToGo] = useState<boolean>(false);
 
 	if (profile === null) {
 		return <Navigate to="/" replace/>;
@@ -35,6 +37,13 @@ export const Index = ({profile}: GameProps): ReactElement => {
 
 		if (!hidden && value.hidden) {
 			continue;
+		}
+
+		if (onlyShow10PercentToGo) {
+			const percentage = getTotalCompletionPercentageOfGame(value);
+			if (percentage < 90 || percentage === 100) {
+				continue;
+			}
 		}
 
 		const onGameSelectedHandler = () => {
@@ -53,6 +62,9 @@ export const Index = ({profile}: GameProps): ReactElement => {
 	const hiddenGamesHandler = (event: ChangeEvent<HTMLInputElement>) => {
 		setHidden(event.currentTarget.checked);
 	};
+	const onlyShow10PercentToGoHandler = (event: ChangeEvent<HTMLInputElement>) => {
+		setOnlyShow10PercentToGo(event.currentTarget.checked);
+	};
 
 	const titles: ReactElement[] = [
 		<h2 key="title" className="text-2xl">All Games</h2>,
@@ -68,6 +80,13 @@ export const Index = ({profile}: GameProps): ReactElement => {
 			value={hidden}
 			title="Show hidden games?"
 			onChange={hiddenGamesHandler}
+			column={false}
+		/>,
+		<ToggleSwitch
+			key="only-show-10-percent-to-go"
+			value={onlyShow10PercentToGo}
+			title="Only show 10 percent to go?"
+			onChange={onlyShow10PercentToGoHandler}
 			column={false}
 		/>
 	];
