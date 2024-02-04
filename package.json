@@ -39,7 +39,9 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "eslint ./",
+    "lint:fix": "eslint ./ --fix"
   },
   "eslintConfig": {
     "extends": [
