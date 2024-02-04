@@ -1,5 +1,5 @@
-import {ChangeEvent, ReactElement, useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {ChangeEvent, ReactElement, useState} from 'react';
+import {Navigate, useNavigate} from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import {getGames} from '@store/game/gameSlice';
 import {RootState} from '@store/rootReducer';
@@ -15,17 +15,15 @@ import {AppDispatch} from '@store/index';
 interface GameProps {
     profile: PotentialProfile
 }
-export const Index = ({profile}: GameProps): ReactElement | null => {
+export const Index = ({profile}: GameProps): ReactElement => {
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch<AppDispatch>();
 	const [hidden, setHidden] = useState<boolean>(false);
 
-	useEffect(() => {
-		if (profile === null) {
-			navigate('/');
-		}
-	}, [profile, navigate]);
+	if (profile === null) {
+		return <Navigate to="/" replace/>;
+	}
 
 	const [howManyToShow, setHowManyToShow] = useState(
 		(profile as Profile).howManyColumnsToShow

@@ -1,5 +1,5 @@
-import {ReactElement, useEffect} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
+import {ReactElement} from 'react';
+import {useParams, Navigate} from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import {getGameSelector} from '@store/game/gameSlice';
 import {RootState} from '@store/rootReducer';
@@ -13,22 +13,12 @@ import {GameAttributes} from './components/GameAttributes';
 interface GameProps {
     profile: PotentialProfile
 }
-export const Index = ({profile}: GameProps): ReactElement | null => {
+export const Index = ({profile}: GameProps): ReactElement => {
 
 	const {gameId} = useParams();
-	const navigate = useNavigate();
 
-	useEffect(() => {
-		if (gameId === undefined || profile === null) {
-			navigate('/');
-		}
-	}, [gameId, profile, navigate]);
-
-	/**
-     * If game id is undefined then lets return null
-     */
-	if (gameId === undefined) {
-		return null;
+	if (gameId === undefined || profile === null) {
+		return <Navigate to="/" replace/>;
 	}
 
 	const game = useSelector<RootState, Game>(state => getGameSelector(state, gameId));
